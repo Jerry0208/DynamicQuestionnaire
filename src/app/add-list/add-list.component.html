@@ -1,0 +1,40 @@
+<!-- 開始時間、結束時間 -->
+<br><br>
+<div class="content">
+  <div class="date d-flex justify-content-center">
+    <div class="steatDate">
+      <span>開始日期 : </span>
+      <input class="data_s" type="date" id="start" min="{{defaultDate}}" [(ngModel)]="sDate"
+        (change)="sDateDetector()" />
+    </div>
+    <div class="endDate">
+      <span>結束日期 : </span>
+      <input class="data_e" type="date" id="end" [min]="sDate" [(ngModel)]="eDate" [disabled]="eDateMaker"/>
+    </div>
+  </div>
+
+
+  <!-- 問卷名稱 -->
+  <div class="quesCss ">
+    <div class="questionName d-flex justify-content-center">
+      <span style="margin-right: 5px;">問卷名稱:</span>
+      <input type="text" style="width: 90%;" [(ngModel)]="title">
+    </div>
+
+    <!-- 問卷介紹 -->
+    <div class="questionDescribe d-flex justify-content-center">
+      <span class="align-self-center" style="margin-right: 5px;">問卷描述:</span>
+      <textarea name="questionDescribe" [(ngModel)]="explain"
+        style="width: 90%; resize: vertical; min-height: 100px; max-height: 500px;"></textarea>
+    </div>
+
+    <br>
+    <div class="button d-flex justify-content-end">
+      <!-- 返回(取消)按鈕 -->
+      <button type="button" class="cancel" (click)="backList()">取消</button>
+
+      <!-- 前往製作問題內容畫面 -->
+      <button type="button" class="next" (click)="next()">下一步</button>
+    </div>
+  </div>
+</div>

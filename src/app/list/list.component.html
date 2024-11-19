@@ -1,0 +1,132 @@
+<div class="mode d-flex justify-content-end">
+  <button type="button" (click)="normalMode()" [ngClass]="{'mode_on': !mode}">使用者模式</button>
+  <button type="button" (click)="masterMode()" [ngClass]="{'mode_on': mode}"style="margin-left: 15px;">管理者模式</button>
+</div>
+<div class=" d-flex justify-content-center search_box">
+  <div>
+    <!-- 名稱搜尋 -->
+    <div class="search_name">
+      <label for="search_name">問卷名稱 :</label> <input type="text" class="list_name" [(ngModel)]="seachName">
+      <!-- (input)="changeInput($event)" -->
+    </div>
+    <br>
+    <!-- 日期搜尋 -->
+    <div class="search_date d-flex align-items-center">
+      <span style="margin-left: 40px;">日期 :</span>
+      <input class="data_s" type="date" id="start" (value)="startDate" min="2023-01-01" max="2025-12-31"
+        [(ngModel)]="startDate" />
+      <span>至</span>
+      <input class="data_e" type="date" id="end" value="endDate" [min]="startDate" max="2025-12-31"
+        [(ngModel)]="endDate" />
+      <div class="statuCss">
+        <select style="height: 36px; margin-left: -25px;" [(ngModel)]="statu">
+          <option value="">問卷狀態</option>
+          <option value="尚未開始">尚未開始</option>
+          <option value="進行中">進行中</option>
+          <option value="已結束">已結束</option>
+          @if(mode){
+            <option value="尚未公布">尚未公布</option>
+          }
+        </select>
+        <button type="submit" (click)="seachNameButton()" style="height: 36px; margin-left: 35px;">搜尋</button>
+      </div>
+    </div>
+    <!-- 增加只顯示進行中、已結束和尚未開始的分類 -->
+    <!--尚未開始增加提醒功能(如果能的話Email提醒之類的) -->
+  </div>
+</div>
+<br>
+
+<!---------------------------------------------------------------------------------------------------------- -->
+<!-- matrial Table -->
+<div class="list2  table-responsive">
+  <!-- 問卷增加、刪除 在 table 內增加 cheak box 讓被選的問卷能在按下垃圾桶 icon 時被刪除 -->
+  @if(mode) {
+  <div class="icon">
+    <a routerLink="/control_tab/add_list1" style=" margin-right: 15px;color: #000;" (click)="addQues()"><mat-icon
+        aria-hidden="false" fontIcon="add"></mat-icon></a>
+    <mat-icon aria-hidden="false" fontIcon="delete" style="cursor: pointer;" (click)="deleteSelectedRows()"></mat-icon>
+  </div>
+  }
+
+  <!-- 預設排序方式 : 日期由近到遠 -->
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 table table-striped table-hover table-bordered">
+
+    <!-- Checkbox Column -->
+    @if (mode) {
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>刪除</th>
+      <td mat-cell *matCellDef="let row">
+        @if(row.status == "進行中" || row.status == "已結束") {
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)" disabled="true">
+          </mat-checkbox>
+        }@else {
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+      }
+      </td>
+    </ng-container>
+    }
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>No.</th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- title Column -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>問卷名稱</th>
+      <td mat-cell *matCellDef="let element">
+        @if (mode) {
+          @if(element.status == "進行中" || element.status == "已結束"){
+            <a routerLink="/control_tab/feedback" routerLinkActive="active" (click)="status(element.status)"> {{element.title}}</a>
+          }@else {
+            <a routerLink="/control_tab/add_list1" routerLinkActive="active" (click)="status(element.status)">{{element.title}}</a>
+            }
+        }@else{
+          @if (element.status == "進行中") {<a routerLink="/new_anwser_page" routerLinkActive="active"
+            (click)="quesInfo(element)"> {{element.title}} </a> }
+          @else { {{element.title}} }
+        }
+      </td>
+    </ng-container>
+
+    <!-- status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>狀態</th>
+      <td mat-cell *matCellDef="let element">{{element.status}}</td>
+    </ng-container>
+
+    <!-- sDate Column -->
+    <ng-container matColumnDef="sDate">
+      <th mat-header-cell *matHeaderCellDef>開始時間</th>
+      <td mat-cell *matCellDef="let element"> {{element.sDate}} </td>
+    </ng-container>
+
+    <!-- eDate Column -->
+    <ng-container matColumnDef="eDate">
+      <th mat-header-cell *matHeaderCellDef>結束時間</th>
+      <td mat-cell *matCellDef="let element"> {{element.eDate}} </td>
+    </ng-container>
+
+    <!-- 統計 Column -->
+    <ng-container matColumnDef="statistics" class="tableCss">
+      <th mat-header-cell *matHeaderCellDef>結果</th>
+      <td mat-cell *matCellDef="let element">
+        @if ( element.status == '進行中' || element.status == '已結束')
+        { <a routerLink="/statistics" (click)="showBackButton()">
+          <mat-icon aria-hidden="false" fontIcon="chevron_right" style="cursor: pointer;"></mat-icon>
+        </a> }
+        @else { 統計中...} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <!-- ------------------------------------------換頁系統------------------------------------------------- -->
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons aria-label="Select page of periodic elements"
+    class="changePage">
+  </mat-paginator>

@@ -1,0 +1,13 @@
+<!-- 單選 、 複選題的統計圖(圓餅圖 or 長方圖)跟統計表(選項被選擇的次數、百分比) -->
+<br><br>
+<div class="contentCss">
+  <br>
+  @if(showBackButton){
+  <button mat-stroked-button style="color: #000;margin-left: 15px" (click)="goBack()">返回上一頁</button>
+  }
+  @for (quest of questData.quest; track $index) {
+  <app-chart class="chartCss" [dataId]="quest.id" [questData]="quest"></app-chart><br><hr>
+  }
+</div>
+
+

@@ -1,0 +1,68 @@
+button {
+  border-radius: 15px;
+}
+
+.rewrite{
+  color: red;
+  position: absolute;
+  top: 30%;
+  right: 40%;
+}
+
+.contentCss {
+  width: 85%;
+  background-color: white;
+  padding: 30px;
+  border: solid black;
+  border-radius: 15px;
+  margin: 0 auto;
+}
+
+.mat-mdc-form-field{
+  width: 250px;
+  margin-left: 41px;
+  margin-top: 5px;
+}
+
+span {
+  font-size: large;
+}
+
+.questionType {
+  margin-left: 50px;
+}
+
+.addSubmitCss {
+  input {
+    border-radius: 15px;
+  }
+
+  position: absolute;
+  right: 15%;
+}
+
+.spaceCss {
+  height: 8px;
+}
+
+.optionsBox {
+  width: 225px;
+  height: 200px;
+}
+
+.nextCss {
+  input {
+    border-radius: 15px;
+  }
+}
+
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: white !important;
+  border: 1px solid;
+}
+
+td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-select{
+  width: 5px;
+}
+

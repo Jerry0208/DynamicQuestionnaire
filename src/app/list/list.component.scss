@@ -1,0 +1,118 @@
+.mode {
+  margin-top: 5px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+
+  button {
+    background-color: white;
+    width: 125px;
+    height: 35px;
+
+  }
+}
+
+.mode_on {
+  color: red;
+  background-color: white;
+}
+
+.search_box {
+  width: 1400px;
+  height: 170px;
+  border: solid black;
+  padding: 30px;
+  background-color: #f2f2f2;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 auto;
+
+
+  .search_name {
+    width: 800px;
+    margin-bottom: 5px;
+    margin-left: 25px;
+
+    .list_name {
+      margin-left: 10px;
+      width: 650px;
+    }
+  }
+
+
+  .search_date {
+    width: 100%;
+    margin-left: 25px;
+
+    .data_s {
+      margin-left: 10px;
+      margin-right: 25px;
+      height: 35px;
+      width: 20%;
+      letter-spacing: 2px;
+    }
+
+    .data_e {
+      margin-left: 25px;
+      margin-right: 65px;
+      height: 35px;
+      width: 20%;
+      letter-spacing: 2px;
+    }
+
+    input {
+      text-align: center;
+      font-size: 18px;
+    }
+  }
+}
+
+.list2 {
+  width: 1400px;
+  margin: 0 auto;
+}
+
+.changePage {
+  margin-top: -16px;
+}
+
+
+button {
+  border-radius: 15px;
+}
+
+::ng-deep .table-bordered> :not(caption)>* {
+  background-color: #7e7d7d !important;
+}
+
+.mat-mdc-table .mat-mdc-header-cell {
+  color: white;
+  border: 1px solid black;
+}
+
+td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-select {
+  width: 5px;
+}
+
+.mat-column-id {
+  width: 7%;
+}
+
+.mat-column-statistics {
+  width: 7%;
+
+  .mat-icon {
+    font-size: 30px;
+  }
+}
+
+.mat-column-status {
+  width: 10%;
+}
+
+::ng-deep .mat-mdc-paginator-container {
+  border: 1px solid gray;
+}
+
+.mat-column-title {
+ width: 500px;
+}

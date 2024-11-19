@@ -1,0 +1,78 @@
+<!-- 預覽問卷問題 -->
+ <br><br>
+<div class="content">
+  <div>
+    <h5 class="" style="text-align: end;"> 問卷時間: {{sDate}} ~ {{eDate}} </h5>
+    <h2 style="text-align: center;"> {{title}} </h2>
+    <div style="margin: 5% 0px;">
+      <span> {{explain}} </span>
+    </div>
+  </div>
+
+  <!-- 回答者基本資料 -->
+  <div>
+    <span style="color: red;">*</span>
+    <label>名稱 : </label>
+    <input style="width: 50%;" placeholder='請輸入名稱'>
+  </div><br>
+  <div>
+    <span style="color: red;">*</span>
+    <label>手機 : </label>
+    <input style="width: 50%;" placeholder="請輸入手機">
+  </div><br>
+  <div>
+    <span style="color: red;">*</span>
+    <label>信箱 : </label>
+    <input style="width: 50%;" placeholder="請輸入信箱">
+  </div><br>
+  <div style="margin-left: 9px;">
+    <label>年齡 : </label>
+    <input style="width: 50%;" placeholder="請輸入年齡">
+  </div><br>
+
+  <!-- 問題內容 -->
+  <ol>
+    @for(quest of questArray; track $index){
+      <li>
+        <h5>
+          {{ quest.questName }}
+          @if (quest.need) {
+          <span style="color: red;">*</span>
+          }
+        </h5>
+      </li>
+      <!-- 多選: M 單選: S 文字輸入: T -->
+      @if (quest.type == "M") {
+        @for (option of quest.options; track $index) {
+        <div>
+          <input type="checkbox">
+          {{option.optionName}}
+        </div><br>
+      }
+      }
+      @if (quest.type == 'S') {
+        @for (option of quest.options; track $index) {
+          <!-- radio注意要有name作為判斷這些radio是同一群組 -->
+          <!-- value是選了這個選項對應的ngModel中的值 -->
+          <div>
+            <input type="radio" name="{{quest.questId}}">
+            {{option.optionName}}
+          </div><br>
+        }
+      }
+
+      @if (quest.type == 'T') {
+        <textarea style="width: 90%; resize: vertical; min-height: 100px; max-height: 500px;"></textarea>
+      }
+    }
+  </ol>
+
+  <div style="text-align: right;">
+    <!-- 返回鍵 -->
+    <button style="margin-right: 25px;" (click)="goBack()">返回</button>
+    <!-- 僅存檔(不公布)鍵(返回list) -->
+    <button (click)=" PubAndSaveData()" style="margin-right: 25px;">存檔並公布</button>
+    <!-- 存檔並公布鍵(返回list) -->
+    <button (click)="saveData()">僅存檔</button>
+  </div><br>
+</div>

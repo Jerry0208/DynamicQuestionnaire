@@ -1,0 +1,26 @@
+
+.divCss {
+  display: flex;
+  justify-content: center;
+
+  h3 {
+      width: 50%;
+  }
+
+  .canvasCss {
+      width: 400px;
+      height: 400px;
+      margin: 3%;
+  }
+
+  .typeTCss {
+      border: 2px solid black;
+      border-radius: 10px;
+      padding: 5px;
+
+  }
+}
+
+.textCss{
+  margin-top: 50px;
+}
