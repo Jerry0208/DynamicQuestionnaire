@@ -2,7 +2,7 @@ button {
   border-radius: 15px;
 }
 
-.rewrite{
+.rewrite {
   color: red;
   position: absolute;
   top: 30%;
@@ -18,7 +18,7 @@ button {
   margin: 0 auto;
 }
 
-.mat-mdc-form-field{
+.mat-mdc-form-field {
   width: 250px;
   margin-left: 41px;
   margin-top: 5px;
@@ -45,9 +45,10 @@ span {
   height: 8px;
 }
 
-.optionsBox {
-  width: 225px;
-  height: 200px;
+.needCss{
+  margin-left: 30px;
+  display: flex;
+  align-items: center;
 }
 
 .nextCss {
@@ -62,7 +63,59 @@ span {
   border: 1px solid;
 }
 
-td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-select{
+td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-select {
   width: 5px;
 }
 
+.optionCss {
+  height: 25vh;
+  background: rgb(243, 243, 250);
+  border: 1px solid black;
+  padding: 5px;
+  margin-bottom: 10px;
+  animation-name: grow;
+  animation-duration: 0.5s;
+
+  @keyframes grow {
+    from {
+      height: 0vh;
+      background: rgb(67, 66, 66);
+    }
+
+    to {
+      height: 25vh;
+      background: rgb(243, 243, 250);
+    }
+  }
+
+  .optionsBox {
+    margin-left: 7%;
+    width: 90%;
+    height: 90%;
+    input{
+      width: 85%;
+      margin-left: 5px;
+    }
+  }
+
+}
+
+.closeOptionCss {
+  background: rgb(67, 66, 66);
+  margin-bottom: 3px;
+  animation-name: close;
+  animation-duration: 0.4s;
+
+  @keyframes close {
+    from {
+      height: 25vh;
+      background: rgb(243, 243, 250);
+    }
+
+    to {
+      height: 0vh;
+      background: linear-gradient(rgb(243, 243, 250),rgb(67, 66, 66));
+    }
+  }
+
+}

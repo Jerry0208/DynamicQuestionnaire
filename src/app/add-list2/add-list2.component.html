@@ -1,39 +1,45 @@
 <br><br>
 <!-- 問卷題目 -->
 <div class="contentCss">
-  <div class="d-flex align-items-center">
-    <span>題目:</span>
-    <!-- 選擇題目類型 : 單選、多選、短述題 (確認問題內容是否有確實填寫) -->
-    <input type="text" [(ngModel)]='questName' style="width: 250px;">
+  <div class="d-flex">
+    <div class="d-flex align-items-center">
+      <span>題目:</span>
+      <!-- 選擇題目類型 : 單選、多選、短述題 (確認問題內容是否有確實填寫) -->
+      <input type="text" [(ngModel)]='questName' style="width: 350px; margin-left: 3px;">
+    </div>
+    <br>
+    @if(rewriteMode){
+    <h5 class="rewrite">再編輯中</h5>
+    }
+    <mat-form-field>
+      <mat-label>題型</mat-label>
+      <mat-select matNativeControl [(ngModel)]='type' (ngModelChange)="resetQuest()">
+        <!-- value如果是空值 ngModel 會吃空值  -->
+        <mat-option value="S">單選</mat-option>
+        <mat-option value="M">多選</mat-option>
+        <mat-option value="T">短述題</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- 是否為必選題 -->
+    <label for="input" class="needCss">必選<input type="checkbox" value="need" style="margin-left: 3px;" [(ngModel)]="need"></label>
   </div>
   <br>
-  @if(rewriteMode){
-    <h5 class="rewrite">再編輯中</h5>
-  }
-  <mat-form-field >
-    <mat-label >題型</mat-label>
-    <mat-select matNativeControl [(ngModel)]='type' (ngModelChange)="resetQuest()">
-      <!-- value如果是空值 ngModel 會吃空值  -->
-      <mat-option value="S">單選</mat-option>
-      <mat-option value="M">多選</mat-option>
-      <mat-option value="T">短述題</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <!-- 是否為必選題 -->
-  <label for="input" style="margin-left: 15px;">必選</label><input type="checkbox" value="need" [(ngModel)]="need">
-  <br>
-  <!-- 選項內容 -->
-  <div class="optionCss">
+  <div [ngClass]="{'closeOptionCss': closeOption()}">
+    <!-- 選項內容 -->
     @if(type == "S" || type== "M"){
-    <mat-icon aria-hidden="delete" fontIcon="add" style="cursor: pointer;" (click)="autoArrayGenerater()"></mat-icon>
-    <div class="optionsBox d-flex  flex-column flex-wrap">
-      @for(options of optionsArray; track $index){
-      <div>
-        <mat-icon aria-hidden="delete" fontIcon="remove" style="cursor: pointer;"
-          (click)="deleteOption($index)"></mat-icon>
-        <input type="text" [placeholder]="$index + 1 + '.' " [(ngModel)]="optionsArray[$index]">
+    <div class="optionCss">
+      <mat-icon aria-hidden="delete" fontIcon="add" style="cursor: pointer;" (click)="autoArrayGenerater()"></mat-icon>
+      <div class="optionsBox d-flex  flex-column flex-wrap">
+        @for(options of optionsArray; track $index){
+        <div>
+          @if(optionsArray.length > 1){
+          <mat-icon aria-hidden="delete" fontIcon="cancel" style="cursor: pointer;"
+            (click)="deleteOption($index)"></mat-icon>
+          }
+          <input type="text" [placeholder]="$index + 1 + '.' " [(ngModel)]="optionsArray[$index]">
+        </div>
+        }
       </div>
-      }
     </div>
     }
   </div>

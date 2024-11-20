@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { NewQuest } from '../service/newQuest.service';//service
 import { ControlTabComponent } from '../control-tab/control-tab.component';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 export interface questionTemp {
   questId: number;
@@ -25,6 +26,7 @@ export interface questionTemp {
     MatIconModule,
     MatTableModule,
     MatCheckboxModule,
+    CommonModule,
   ],
   templateUrl: './add-list2.component.html',
   styleUrl: './add-list2.component.scss',
@@ -53,14 +55,28 @@ export class AddList2Component {
   //選擇題陣列
   optionsArray: Array<string> = ['',''];
 
+  //增加選項
   autoArrayGenerater() {
+    if(this.optionsArray.length >= 10){
+      alert("選項最多10個");
+      return;
+    }
+
     this.optionsArray.push('')
   }
 
+  //刪除選項
   deleteOption(index: number) {
     this.optionsArray.splice(index, 1)
   }
 
+  //關閉選項
+  closeOption(){
+    if(this.type == "T" || this.type == ''){
+      return true;
+    }
+    return false
+  }
 
   //table
   displayedColumns: string[] = ['select', 'questId', 'questName', 'type', 'need', 'rewrite'];
@@ -105,9 +121,14 @@ export class AddList2Component {
   }
 
   //當從選擇題變成短述題時將this.optionsArray(選擇題欄位)清空
+  //如果this.optionsArray沒有內容(長度 = 0)，則重新給予兩的空間
   resetQuest() {
     if (this.type == 'T') {
       this.optionsArray = [];
+    }else{
+      if(this.optionsArray.length <= 0) {
+        this.optionsArray = ['','']
+      }
     }
   }
 

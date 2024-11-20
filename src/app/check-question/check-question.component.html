@@ -35,7 +35,7 @@
     @for(quest of questArray; track $index){
       <li>
         <h5>
-          {{ quest.questName }}
+          <span>{{ quest.questName }}</span>
           @if (quest.need) {
           <span style="color: red;">*</span>
           }
@@ -46,7 +46,7 @@
         @for (option of quest.options; track $index) {
         <div>
           <input type="checkbox">
-          {{option.optionName}}
+          <span>{{option.optionName}}</span>
         </div><br>
       }
       }
@@ -56,7 +56,7 @@
           <!-- value是選了這個選項對應的ngModel中的值 -->
           <div>
             <input type="radio" name="{{quest.questId}}">
-            {{option.optionName}}
+            <span>{{option.optionName}}</span>
           </div><br>
         }
       }
