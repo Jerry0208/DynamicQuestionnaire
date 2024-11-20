@@ -1,16 +1,12 @@
 <br><br>
 <!-- 問卷題目 -->
 <div class="contentCss">
-  <div class="d-flex">
+  <div class="d-flex align-items-center">
     <div class="d-flex align-items-center">
       <span>題目:</span>
       <!-- 選擇題目類型 : 單選、多選、短述題 (確認問題內容是否有確實填寫) -->
       <input type="text" [(ngModel)]='questName' style="width: 350px; margin-left: 3px;">
     </div>
-    <br>
-    @if(rewriteMode){
-    <h5 class="rewrite">再編輯中</h5>
-    }
     <mat-form-field>
       <mat-label>題型</mat-label>
       <mat-select matNativeControl [(ngModel)]='type' (ngModelChange)="resetQuest()">
@@ -21,7 +17,11 @@
       </mat-select>
     </mat-form-field>
     <!-- 是否為必選題 -->
-    <label for="input" class="needCss">必選<input type="checkbox" value="need" style="margin-left: 3px;" [(ngModel)]="need"></label>
+    <label for="input" class="needCss">必選<input type="checkbox" value="need" style="margin-left: 3px;"
+        [(ngModel)]="need"></label>
+    @if(rewriteMode){
+    <span class="rewrite" style="margin-left: 10%;">再編輯中</span>
+    }
   </div>
   <br>
   <div [ngClass]="{'closeOptionCss': closeOption()}">
@@ -31,8 +31,10 @@
       <mat-icon aria-hidden="delete" fontIcon="add" style="cursor: pointer;" (click)="autoArrayGenerater()"></mat-icon>
       <div class="optionsBox d-flex  flex-column flex-wrap">
         @for(options of optionsArray; track $index){
-        <div>
-          @if(optionsArray.length > 1){
+        <div class="oprionsInnerCss d-flex align-items-center">
+          @if($index == 0){
+          <div class="block"></div>
+          }@else {
           <mat-icon aria-hidden="delete" fontIcon="cancel" style="cursor: pointer;"
             (click)="deleteOption($index)"></mat-icon>
           }
@@ -44,15 +46,16 @@
     }
   </div>
   <!-- 加入Table按鍵 以是否為再編輯模式做更改-->
-  <div class="addSubmitCss">
-    <input type="submit" value="加入" (click)="addRow()">
+  <div class="spaceCss d-flex align-items-center">
+    <div class="addSubmitCss">
+      <input type="submit" value="加入" (click)="addRow()">
+    </div>
+    <!-- 問卷預覽 : 問卷題目、問卷類型、題目數量、再編輯題目功能、刪除題目(+確認畫面) -->
+    @if(!rewriteMode){
+    <mat-icon aria-hidden="delete" fontIcon="delete" style="cursor: pointer; font-size: 27px;margin-left: 22.5px;"
+      (click)="deleteSelectedRows()"></mat-icon>
+    }
   </div>
-  <div class="spaceCss"></div>
-  <!-- 問卷預覽 : 問卷題目、問卷類型、題目數量、再編輯題目功能、刪除題目(+確認畫面) -->
-  @if(!rewriteMode){
-  <mat-icon aria-hidden="delete" fontIcon="delete" style="cursor: pointer;" (click)="deleteSelectedRows()"></mat-icon>
-  }
-  <br>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <!-- Checkbox Column -->

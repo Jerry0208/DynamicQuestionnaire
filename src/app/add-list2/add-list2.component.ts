@@ -45,7 +45,7 @@ export class AddList2Component {
 
   need: boolean = false;
 
-  type !: string;
+  type : string = 'S';
 
   options: string = '';
 

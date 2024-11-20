@@ -2,11 +2,17 @@ button {
   border-radius: 15px;
 }
 
+span {
+  font-size: large;
+}
+
+td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-select {
+  width: 5px;
+}
+
 .rewrite {
+  font-weight: bolder;
   color: red;
-  position: absolute;
-  top: 30%;
-  right: 40%;
 }
 
 .contentCss {
@@ -24,10 +30,6 @@ button {
   margin-top: 5px;
 }
 
-span {
-  font-size: large;
-}
-
 .questionType {
   margin-left: 50px;
 }
@@ -38,14 +40,22 @@ span {
   }
 
   position: absolute;
-  right: 15%;
+  right: 10%;
+}
+
+.block {
+  width: 24px;
+  display: inline-block;
 }
 
 .spaceCss {
-  height: 8px;
+  width: 100%;
+  height: 5%;
+  margin-top: 15px;
+  margin-bottom: 20px;
 }
 
-.needCss{
+.needCss {
   margin-left: 30px;
   display: flex;
   align-items: center;
@@ -63,8 +73,9 @@ span {
   border: 1px solid;
 }
 
-td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-select {
-  width: 5px;
+
+.oprionsInnerCss {
+  margin-bottom: 5px;
 }
 
 .optionCss {
@@ -72,7 +83,7 @@ td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-selec
   background: rgb(243, 243, 250);
   border: 1px solid black;
   padding: 5px;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   animation-name: grow;
   animation-duration: 0.5s;
 
@@ -92,8 +103,9 @@ td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-selec
     margin-left: 7%;
     width: 90%;
     height: 90%;
-    input{
-      width: 85%;
+
+    input {
+      width: 90%;
       margin-left: 5px;
     }
   }
@@ -101,7 +113,6 @@ td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-selec
 }
 
 .closeOptionCss {
-  background: rgb(67, 66, 66);
   margin-bottom: 3px;
   animation-name: close;
   animation-duration: 0.4s;
@@ -114,7 +125,7 @@ td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-selec
 
     to {
       height: 0vh;
-      background: linear-gradient(rgb(243, 243, 250),rgb(67, 66, 66));
+      background: linear-gradient(rgb(243, 243, 250), rgb(67, 66, 66));
     }
   }
 
