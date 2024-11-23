@@ -1,6 +1,6 @@
 <div class="mode d-flex justify-content-end">
   <button type="button" (click)="normalMode()" [ngClass]="{'mode_on': !mode}">使用者模式</button>
-  <button type="button" (click)="masterMode()" [ngClass]="{'mode_on': mode}"style="margin-left: 15px;">管理者模式</button>
+  <button type="button" (click)="masterMode()" [ngClass]="{'mode_on': mode}" style="margin-left: 15px;">管理者模式</button>
 </div>
 <div class=" d-flex justify-content-center search_box">
   <div>
@@ -25,7 +25,7 @@
           <option value="進行中">進行中</option>
           <option value="已結束">已結束</option>
           @if(mode){
-            <option value="尚未公布">尚未公布</option>
+          <option value="尚未公布">尚未公布</option>
           }
         </select>
         <button type="submit" (click)="seachNameButton()" style="height: 36px; margin-left: 35px;">搜尋</button>
@@ -41,14 +41,25 @@
 <!-- matrial Table -->
 <div class="list2  table-responsive">
   <!-- 問卷增加、刪除 在 table 內增加 cheak box 讓被選的問卷能在按下垃圾桶 icon 時被刪除 -->
-  @if(mode) {
-  <div class="icon">
-    <a routerLink="/control_tab/add_list1" style=" margin-right: 15px;color: #000;" (click)="addQues()"><mat-icon
-        aria-hidden="false" fontIcon="add"></mat-icon></a>
-    <mat-icon aria-hidden="false" fontIcon="delete" style="cursor: pointer;" (click)="deleteSelectedRows()"></mat-icon>
+  <div class="mid">
+    @if(mode) {
+    <div class="icon">
+      <div class="delet_icon">
+        <mat-icon aria-hidden="false" fontIcon="delete" (click)="deleteSelectedRows()"></mat-icon>
+      </div>
+      <div class="add_icon">
+        <a routerLink="/control_tab/add_list1" (click)="addQues()"><mat-icon aria-hidden="false"
+            fontIcon="add"></mat-icon></a>
+      </div>
+    </div>
+    }@else {
+    <div class="hide_dog_css">
+      <div class="runing_dog_css d-flex justify-content-center">
+        <img class="" src="./runing_dog.gif" alt="">
+      </div>
+    </div>
+    }
   </div>
-  }
-
   <!-- 預設排序方式 : 日期由近到遠 -->
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 table table-striped table-hover table-bordered">
 
@@ -58,14 +69,14 @@
       <th mat-header-cell *matHeaderCellDef>刪除</th>
       <td mat-cell *matCellDef="let row">
         @if(row.status == "進行中" || row.status == "已結束") {
-          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-            [checked]="selection.isSelected(row)" disabled="true">
-          </mat-checkbox>
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)" disabled="true">
+        </mat-checkbox>
         }@else {
-          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-            [checked]="selection.isSelected(row)">
-          </mat-checkbox>
-      }
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+        }
       </td>
     </ng-container>
     }
@@ -81,15 +92,17 @@
       <th mat-header-cell *matHeaderCellDef>問卷名稱</th>
       <td mat-cell *matCellDef="let element">
         @if (mode) {
-          @if(element.status == "進行中" || element.status == "已結束"){
-            <a routerLink="/control_tab/feedback" routerLinkActive="active" (click)="status(element.status)"> {{element.title}}</a>
-          }@else {
-            <a routerLink="/control_tab/add_list1" routerLinkActive="active" (click)="status(element.status)">{{element.title}}</a>
-            }
+        @if(element.status == "進行中" || element.status == "已結束"){
+        <a routerLink="/control_tab/feedback" routerLinkActive="active" (click)="status(element.status)">
+          {{element.title}}</a>
+        }@else {
+        <a routerLink="/control_tab/add_list1" routerLinkActive="active"
+          (click)="status(element.status)">{{element.title}}</a>
+        }
         }@else{
-          @if (element.status == "進行中") {<a routerLink="/new_anwser_page" routerLinkActive="active"
-            (click)="quesInfo(element)"> {{element.title}} </a> }
-          @else { {{element.title}} }
+        @if (element.status == "進行中") {<a routerLink="/new_anwser_page" routerLinkActive="active"
+          (click)="quesInfo(element)"> {{element.title}} </a> }
+        @else { {{element.title}} }
         }
       </td>
     </ng-container>
