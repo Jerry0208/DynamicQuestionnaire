@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';//table check box
 import { CommonModule } from '@angular/common';//更改按鍵顏色
-import { AfterViewInit, Component, ViewChild } from '@angular/core';//table 顯示頁數:ViewChild、AfterViewInit
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';//table 顯示頁數:ViewChild、AfterViewInit
 import { FormsModule } from '@angular/forms';//ngmodule
 import { MatCheckboxModule } from '@angular/material/checkbox';//check box module
 import { MatIconModule } from '@angular/material/icon';//icon
@@ -40,7 +40,7 @@ export interface PeriodicElement {
 
 export class ListComponent implements AfterViewInit {
 
-  constructor(private quesStatus: QuesStatus) { }
+  constructor(private quesStatus: QuesStatus, private cdr: ChangeDetectorRef) { }
   //日期選擇範圍
   startDate: string = "";
   endDate: string = "";
@@ -147,6 +147,7 @@ export class ListComponent implements AfterViewInit {
       this.displayedColumns = ['id', 'title', 'status', 'sDate', 'eDate', 'statistics']
     }
 
+    this.cdr.detectChanges(); // 手動觸發檢測
   }
 
   masterMode() {

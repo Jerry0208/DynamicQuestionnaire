@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NewQuest } from '../service/newQuest.service';
+import { New_question as question_service } from '../service/new_question.service';
 import { Router } from '@angular/router';
+import { HttpClientService } from '../service/api.interface';
+
 
 @Component({
   selector: 'app-check-question',
@@ -13,47 +15,32 @@ import { Router } from '@angular/router';
 })
 export class CheckQuestionComponent {
 
-  constructor(private ques : NewQuest, private router:Router){}
+  constructor(private http: HttpClientService, private questions_service: question_service, private router: Router) { }
 
-
-
-  //問卷基本資訊
-
-
-  //問卷名
-  title!: string;
-  //問卷描述
-  explain!: string;
-  //起迄日期
-  sDate!: string;
-  eDate!: string;
-  //問卷內容
-  questArray!: Array<any>;
-  //是否公布
-  publish!:boolean;
-
+  //問卷資訊
+  quiz !: question_service;
 
   ngOnInit(): void {
-    this.title = this.ques.title;
-    this.explain = this.ques.explain;
-    this.sDate = this.ques.sDate;
-    this.eDate = this.ques.eDate;
-    this.questArray = this.ques.questArray;
+    this.quiz = this.questions_service;
+    console.log(this.questions_service);
   }
 
-  goBack(){
+  goBack() {
     this.router.navigateByUrl('/control_tab/add_list2')
   }
 
-  PubAndSaveData(){
-    alert('存檔並公布成功!')
-    this.ques.reset();
-    this.router.navigateByUrl('/list');
+  PubAndSaveData() {
+    this.quiz.is_published = true;
+    this.http.postApi('http://localhost:8080/quiz/create', this.quiz)
+    // alert('存檔並公布成功!')
+    // this.questions_service.reset();
+    // this.router.navigateByUrl('/list');
   }
 
-  saveData(){
+  saveData() {
+    this.quiz.is_published = false;
     alert('僅存檔成功!')
-    this.ques.reset();
+    this.questions_service.reset();
     this.router.navigateByUrl('/list');
   }
 

@@ -9,58 +9,66 @@ import { Injectable } from '@angular/core';
 // 沒有Id 是因為 SQL 會自動生成
 
 
-export class NewQuest implements QuestData {
+export class New_question implements question_data {
   //問卷基本資訊
   //問卷名
-  title!: string;
+  name!: string;
   //問卷描述
-  explain!: string;
+  description!: string;
   //狀態
   status: string = '';
   //起迄日期
-  sDate!: string;
-  eDate!: string;
+  start_date!: Date;
+  end_date!: Date;
+  // 是否公布(true:公布, false:不公布)
+  is_published !: boolean;
   //問卷內容
-  questArray!: any ;
+  question_list!: QuestArray[] ;
 
 
   reset() {
-    this.title = '';
-    this.explain = '';
+    this.name = '';
+    this.description = '';
     this.status = '';
-    this.sDate = '';
-    this.eDate = '';
-    this.questArray = [];
+    this.start_date = new Date();
+    this.end_date = new Date();
+    this.is_published = false;
+    this.question_list = [];
   }
 
 }
 
 //問卷基本資訊
-interface QuestData {
+interface question_data {
   //問卷名
-  title: string;
+  name: string;
   //問卷描述
-  explain: string;
+  description: string;
   //狀態
   status: string;
   //起迄日期
-  sDate: string;
-  eDate: string;
+  start_date: Date;
+  end_date: Date;
   //問卷內容
-  questArray: QuestArray[];
+  question_list: QuestArray[];
 
 }
 
 //問卷內容
 interface QuestArray {
   //問題的ID
-  questId: number;
+  id: number;
   //問題名
-  questName: string;
+  title: string;
   //必填欄位
-  need: boolean;
+  is_necessary: boolean;
   //問題類型
   type: string;
   //題目 (短述題為空值)
-  options: Array<JSON | null>;
+  option_list: option[];
+}
+
+interface option {
+  name : String;
+  code : String;
 }

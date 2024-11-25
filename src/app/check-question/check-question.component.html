@@ -2,10 +2,10 @@
  <br><br>
 <div class="content">
   <div>
-    <h5 class="" style="text-align: end;"> 問卷時間: {{sDate}} ~ {{eDate}} </h5>
-    <h2 style="text-align: center;"> {{title}} </h2>
+    <h5 class="" style="text-align: end;"> 問卷時間: {{quiz.start_date}} ~ {{quiz.end_date}} </h5>
+    <h2 style="text-align: center;"> {{quiz.name}} </h2>
     <div style="margin: 5% 0px;">
-      <span> {{explain}} </span>
+      <span> {{quiz.description}} </span>
     </div>
   </div>
 
@@ -32,31 +32,30 @@
 
   <!-- 問題內容 -->
   <ol>
-    @for(quest of questArray; track $index){
+    @for(quest of quiz.question_list; track $index){
       <li>
         <h5>
-          <span>{{ quest.questName }}</span>
-          @if (quest.need) {
+          <span>{{ quiz.name }}</span>
+          @if (quest.is_necessary) {
           <span style="color: red;">*</span>
           }
         </h5>
       </li>
       <!-- 多選: M 單選: S 文字輸入: T -->
       @if (quest.type == "M") {
-        @for (option of quest.options; track $index) {
+        @for (option of quest.option_list; track $index) {
         <div>
           <input type="checkbox">
-          <span>{{option.optionName}}</span>
+          <span>{{option.name}}</span>
         </div><br>
       }
       }
       @if (quest.type == 'S') {
-        @for (option of quest.options; track $index) {
+        @for (option of quest.option_list; track $index) {
           <!-- radio注意要有name作為判斷這些radio是同一群組 -->
-          <!-- value是選了這個選項對應的ngModel中的值 -->
           <div>
-            <input type="radio" name="{{quest.questId}}">
-            <span>{{option.optionName}}</span>
+            <input type="radio" name="{{quest.title}}">
+            <span>{{option.name}}</span>
           </div><br>
         }
       }

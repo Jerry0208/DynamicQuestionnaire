@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NewQuest } from '../service/newQuest.service';
+import { New_question } from '../service/new_question.service';
 import { ControlTabComponent } from '../control-tab/control-tab.component';
 import { QuesStatus } from '../service/quesStatus.service';
 
@@ -13,15 +13,15 @@ import { QuesStatus } from '../service/quesStatus.service';
   styleUrl: './add-list.component.scss'
 })
 export class AddListComponent {
-  constructor(private router: Router, private quesTemp: NewQuest, private tabLink: ControlTabComponent,private newQues : QuesStatus) { }
+  constructor(private router: Router, private quesTemp: New_question, private tabLink: ControlTabComponent,private newQues : QuesStatus) { }
 
   //問卷名、問卷描述
   title !: string;
   explain!: string;
 
   //開始和結束日期
-  sDate = '';
-  eDate = ''
+  sDate :Date = new Date();
+  eDate :Date = new Date();
 
   //日期選擇範圍 : 當日 ~ 選擇日期
   toDay = new Date();
@@ -67,13 +67,13 @@ export class AddListComponent {
 
   //判定是否為修改問卷
   reset() {
-    if (!this.quesTemp.title && !this.quesTemp.explain && !this.quesTemp.sDate && !this.quesTemp.eDate) {
+    if (!this.quesTemp.name && !this.quesTemp.description && !this.quesTemp.start_date && !this.quesTemp.end_date) {
       this.eDateMaker = true;
     }else{
-      this.title = this.quesTemp.title;
-      this.explain = this.quesTemp.explain;
-      this.sDate = this.quesTemp.sDate;
-      this.eDate = this.quesTemp.eDate;
+      this.title = this.quesTemp.name;
+      this.explain = this.quesTemp.description;
+      this.sDate = this.quesTemp.start_date;
+      this.eDate = this.quesTemp.end_date;
       this.eDateMaker = false;
     }
   }
@@ -81,7 +81,7 @@ export class AddListComponent {
 
   //防止顯選結束日期後再選開始日期
   eDateMaker = true
-  sDateDetector() {
+  start_date_detector() {
     if (this.sDate) {
       this.eDateMaker = false
     }
@@ -123,10 +123,10 @@ export class AddListComponent {
       return
     }
     //問卷基本資訊
-    this.quesTemp.title = this.title;
-    this.quesTemp.explain = this.explain;
-    this.quesTemp.sDate = this.sDate;
-    this.quesTemp.eDate = this.eDate;
+    this.quesTemp.name = this.title;
+    this.quesTemp.description = this.explain;
+    this.quesTemp.start_date = this.sDate;
+    this.quesTemp.end_date = this.eDate;
     //讓上方 tab 隨著換頁移動
     this.tabLink.switchTab('/control_tab/add_list2')
     this.router.navigateByUrl('/control_tab/add_list2')
