@@ -1,1 +1,6 @@
 <router-outlet></router-outlet>
+@if(loading$ | async) {
+  <div class="overlay"></div>
+  <!-- diameter="100" 調整 loading 的大小 -->
+  <mat-spinner diameter="100"></mat-spinner>
+}

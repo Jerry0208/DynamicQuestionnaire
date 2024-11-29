@@ -1,6 +1,6 @@
 <div class="mode d-flex justify-content-end">
-  <button type="button" (click)="normalMode()" [ngClass]="{'mode_on': !mode}">使用者模式</button>
-  <button type="button" (click)="masterMode()" [ngClass]="{'mode_on': mode}" style="margin-left: 15px;">管理者模式</button>
+  <button type="button" (click)="normal()" [ngClass]="{'mode_on': !is_admin}">使用者模式</button>
+  <button type="button" (click)="to_admin()" [ngClass]="{'mode_on': is_admin}" style="margin-left: 15px;">管理者模式</button>
 </div>
 <div class=" d-flex justify-content-center search_box">
   <div>
@@ -21,11 +21,9 @@
       </span>
       @if(is_date_seach) {
       <span style="margin-left: 150px;">日期 :</span>
-      <input class="data_s" type="date" id="start" (value)="startDate" min="2023-01-01" max="2025-12-31"
-        [(ngModel)]="startDate" />
+      <input class="data_s" type="date" id="start" [(ngModel)]="startDate" />
       <span>至</span>
-      <input class="data_e" type="date" id="end" value="endDate" [min]="startDate" max="2025-12-31"
-        [(ngModel)]="endDate" />
+      <input class="data_e" type="date" id="end" value="endDate" [min]="startDate" [(ngModel)]="endDate" />
       }@else {
       <div class="statuCss d-grid gap-5 d-flex justify-content-evenly">
         <button type="button" class="btn btn-outline-primary {{seach_status_active_list[0]}}"
@@ -34,7 +32,7 @@
           (click)="seach_status_is(1, '進行中')">進行中</button>
         <button type="button" class="btn btn-outline-success {{seach_status_active_list[2]}}"
           (click)="seach_status_is(2, '已結束')">已結束</button>
-        @if(mode){
+        @if(is_admin){
         <button type="button" class="btn btn-outline-dark {{seach_status_active_list[3]}}"
           (click)="seach_status_is(3, '尚未公布')" style="margin-left: -13px;">尚未公布</button>
         }
@@ -54,7 +52,7 @@
 <div class="list2  table-responsive">
   <!-- 問卷增加、刪除 在 table 內增加 cheak box 讓被選的問卷能在按下垃圾桶 icon 時被刪除 -->
   <div class="mid">
-    @if(mode) {
+    @if(is_admin) {
     <div class="icon">
       <div class="delet_icon">
         <mat-icon aria-hidden="false" fontIcon="delete" (click)="deleteSelectedRows()"></mat-icon>
@@ -76,7 +74,7 @@
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 table table-striped table-hover table-bordered">
 
     <!-- Checkbox Column -->
-    @if (mode) {
+    @if (is_admin) {
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>刪除</th>
       <td mat-cell *matCellDef="let row">
@@ -103,7 +101,7 @@
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>問卷名稱</th>
       <td mat-cell *matCellDef="let element">
-        @if (mode) {
+        @if (is_admin) {
         @if(element.status == "進行中" || element.status == "已結束"){
         <a routerLink="/control_tab/feedback" routerLinkActive="active" (click)="status(element.status)">
           {{element.name}}</a>
@@ -145,7 +143,7 @@
         { <a routerLink="/statistics">
           <mat-icon aria-hidden="false" fontIcon="chevron_right" style="cursor: pointer;"></mat-icon>
         </a> }
-        @else { 統計中...} </td>
+        @else { 敬請期待 } </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { SelectionModel } from '@angular/cdk/collections';//table check box
 import { CommonModule } from '@angular/common';//更改按鍵顏色
 import { AfterViewInit, ChangeDetectorRef, Component, inject, ViewChild } from '@angular/core';//table 顯示頁數:ViewChild、AfterViewInit
@@ -9,14 +10,32 @@ import { MatTableModule, MatTableDataSource } from '@angular/material/table';// 
 import { RouterLink, RouterLinkActive } from '@angular/router';//router
 import { MatDialog } from '@angular/material/dialog'; // mat dialog
 import { DialogContent } from '../dialog/dialog';
+import moment from 'moment';
+import { LoadingService } from '../service/loading.service';
 
 
-export interface PeriodicElement {
+export interface ListElement {
   id: number;
   name: string;
   status: string;
-  start_date: string;
-  end_date: string;
+  start_date: Date;
+  end_date: Date;
+}
+
+export interface search_res {
+  code: number;
+  massage: string;
+  quiz_list: quiz_list[];
+}
+
+export interface quiz_list {
+  id: number;
+  name: string;
+  status: string;
+  description: string;
+  is_published: true;
+  start_date: Date;
+  end_date: Date;
 }
 
 
@@ -41,16 +60,16 @@ export interface PeriodicElement {
 
 export class ListComponent implements AfterViewInit {
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef, private http: HttpClient, private loadingService: LoadingService) { }
   //日期選擇範圍
-  startDate: string = "";
-  endDate: string = "";
+  startDate!: Date;
+  endDate!: Date;
 
   //搜索問卷名稱
   seachName: string = ""
 
   //管理者模式 (預設為 false)
-  mode: boolean = false;
+  is_admin: boolean = false;
 
   //搜索問卷狀態
   statu: string = "";
@@ -61,84 +80,36 @@ export class ListComponent implements AfterViewInit {
   // 將 MatDialog 注入 dialog
   readonly dialog = inject(MatDialog);
 
-  //狀態搜尋按鈕
+  //狀態搜尋按鈕 active
   seach_status_active_list: string[] = ["", "", "", ""];
 
-  //假資料
-  listData: PeriodicElement[] = [
-    {
-      id: 1, name: "市場調查01", status: "已結束", start_date: "2024-01-01", end_date: "2024-03-31",
-    },
-    {
-      id: 2, name: "市場調查02", status: "已結束", start_date: "2024-04-01", end_date: "2024-06-30",
-    },
-    {
-      id: 3, name: "市場調查03", status: "進行中", start_date: "2024-07-01", end_date: "2024-10-30",
-    },
-    {
-      id: 4, name: "價格調查01", status: "已結束", start_date: "2024-01-01", end_date: "2024-03-31",
-    },
-    {
-      id: 5, name: "價格調查02", status: "已結束", start_date: "2024-04-01", end_date: "2024-06-30",
-    },
-    {
-      id: 6, name: "價格調查03", status: "尚未開始", start_date: "2024-11-01", end_date: "2024-12-31",
-    },
-    {
-      id: 7, name: "興趣調查01", status: "已結束", start_date: "2024-01-01", end_date: "2024-03-31",
-    },
-    {
-      id: 8, name: "興趣調查02", status: "已結束", start_date: "2024-04-01", end_date: "2024-06-30",
-    },
-    {
-      id: 9, name: "興趣調查03", status: "尚未公布", start_date: "2024-11-01", end_date: "2024-12-31",
-    },
-    {
-      id: 10, name: "年度調查01", status: "進行中", start_date: "2024-07-01", end_date: "2024-10-30"
-    },
-    {
-      id: 11, name: "市場調查04", status: "進行中", start_date: "2024-10-15", end_date: "2025-01-15",
-    },
-    {
-      id: 12, name: "價格調查04", status: "已結束", start_date: "2024-05-01", end_date: "2024-07-31",
-    },
-    {
-      id: 13, name: "市場分析01", status: "進行中", start_date: "2024-09-01", end_date: "2024-12-31",
-    },
-    {
-      id: 14, name: "興趣調查04", status: "尚未開始", start_date: "2025-01-01", end_date: "2025-03-31",
-    },
-    {
-      id: 15, name: "市場趨勢01", status: "已結束", start_date: "2023-11-01", end_date: "2024-01-31",
-    },
-    {
-      id: 16, name: "年度調查02", status: "進行中", start_date: "2024-08-01", end_date: "2024-12-31",
-    },
-    {
-      id: 17, name: "需求調查01", status: "尚未開始", start_date: "2025-02-01", end_date: "2025-04-30",
-    },
-    {
-      id: 18, name: "價格趨勢01", status: "進行中", start_date: "2024-09-01", end_date: "2024-12-01",
-    },
-    {
-      id: 19, name: "年度調查03", status: "尚未開始", start_date: "2025-01-01", end_date: "2025-04-30",
-    },
-    {
-      id: 20, name: "市場調查05", status: "進行中", start_date: "2024-10-01", end_date: "2025-01-01",
-    }
-  ];
+  listData: ListElement[] = [];
 
-  //table名、table資料來源
   displayedColumns: string[] = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
-  dataSource = new MatTableDataSource<PeriodicElement>(this.listData);
+  dataSource = new MatTableDataSource<ListElement>(this.listData);
 
-  selection = new SelectionModel<PeriodicElement>(true, []);
+  selection = new SelectionModel<ListElement>(true, []);
 
   //顯示頁數
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
   ngAfterViewInit(): void {
+
+    //保持當前的使用的模式
+    if (sessionStorage.getItem("is_admin") == "true") {
+      this.is_admin = true
+      this.displayedColumns = ['select', 'id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
+    } else {
+      this.is_admin = false
+      this.displayedColumns = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
+    }
+
+    //搜尋全部問卷,並把內容呈現在畫面上
+    let search_req = {
+      is_admin: this.is_admin
+    }
+    this.search_and_set_quiz_status(search_req);
 
     //顯示頁數、將預設顯示的英文更改成中文
     this.dataSource.paginator = this.paginator;
@@ -148,27 +119,23 @@ export class ListComponent implements AfterViewInit {
     this.dataSource.paginator._intl.nextPageLabel = "下一頁"
     this.dataSource.paginator._intl.lastPageLabel = "最後一頁"
 
-    //保持當前的使用的模式
-    if (sessionStorage.getItem("mode") == "true") {
-      this.mode = true
-      this.displayedColumns = ['select', 'id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
-    } else {
-      this.mode = false
-      this.displayedColumns = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
-    }
 
-    this.cdr.detectChanges(); // 手動觸發檢測
   }
 
-  masterMode() {
-    this.mode = true
+  to_admin() {
+    this.is_admin = true
     this.displayedColumns = ['select', 'id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
-    sessionStorage.setItem("mode", "true")
+    sessionStorage.setItem("is_admin", "true")
+    let search_req = {is_admin: this.is_admin}
+    this.search_and_set_quiz_status(search_req);
+
   }
-  normalMode() {
-    this.mode = false
+  normal() {
+    this.is_admin = false
     this.displayedColumns = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
-    sessionStorage.setItem("mode", "false")
+    sessionStorage.setItem("is_admin", "false")
+    let search_req = { is_admin: this.is_admin}
+    this.search_and_set_quiz_status(search_req);
   }
 
   //刪除列表
@@ -196,7 +163,7 @@ export class ListComponent implements AfterViewInit {
   //模糊搜尋:只能搜尋到由API接過來的資料，沒辦法搜尋到資料庫所有資料
   //即時模糊搜尋功能 By input event
   changeInput(event: Event) {
-    let data: PeriodicElement[] = []
+    let data: ListElement[] = []
     // as HTMLInputElement 轉型，之後才能使用.value
     // console.log((event.target as HTMLInputElement).value)
     this.listData.forEach((res) => {
@@ -208,48 +175,69 @@ export class ListComponent implements AfterViewInit {
     this.dataSource.data = data
   }
 
-  //讓radio可以取消選取
-  canceChoice() {
+  //讓問卷依時間給予狀態
+  search_and_set_quiz_status(search_req: any) {
+    let creach_res!: search_res;
+    this.loadingService.show();
+    this.http.post('http://localhost:8080/quiz/search', search_req).subscribe((res: any) => {
+      creach_res = res;
+      // 加入問卷狀態:
+      // 1.如果 is_published 為 false = 尚未公布
+      // 2.現在時間 < 開始時間 = 尚未開始
+      // 3.現在時間 >= 開始時間 &&  現在時間 <= 結束時間 = 進行中
+      // 4.現在時間 > 結束時間 = 已結束
+      for (let i = 0; i < creach_res.quiz_list.length; i++) {
+        // 獲得現在日期 moment 可以直接透過方法比較日期
+        let now: moment.Moment = moment();
 
+        //  is_published = false 為未公布
+        if (!creach_res.quiz_list[i].is_published) {
+          creach_res.quiz_list[i].status = "尚未公布";
+          continue;
+        }
+
+        // moment.isBefore，現在日期比開始日期還早時，問卷狀態為尚未開始
+        if (now.isBefore(creach_res.quiz_list[i].start_date)) {
+          creach_res.quiz_list[i].status = "尚未開始";
+          continue;
+        }
+
+        //現在日期跟開始日期一樣或是在開始日期之後 且 現在日期跟結束日期一樣或是在結束時間之前，問卷狀態為進行中
+        if (now.isSameOrAfter(creach_res.quiz_list[i].start_date) && now.isSameOrBefore(creach_res.quiz_list[i].end_date)) {
+          creach_res.quiz_list[i].status = "進行中";
+          continue;
+        }
+
+        //剩餘問卷狀態為已結束
+        creach_res.quiz_list[i].status = "已結束";
+      }
+
+      let quizlist: ListElement[] = [];
+      creach_res.quiz_list.forEach(item => {
+        let list_element: ListElement = {
+          id: item.id,
+          name: item.name,
+          status: item.status,
+          start_date: item.start_date,
+          end_date: item.end_date,
+        }
+        quizlist.push(list_element)
+      });
+      this.dataSource.data = quizlist;
+      this.loadingService.hide();
+    })
   }
 
   //按鈕搜尋 By ngMoudle
   seachNameButton() {
-    let data: PeriodicElement[] = []
-    let statuSeach: boolean = false
-
-    //狀態搜尋
-    if (this.statu) {
-      data = this.listData.filter((res) => {
-        return res.status == this.statu
-      });
-      statuSeach = true;
-
-      //table吃的資料dataSource
-
+    let search_req = {
+      name: this.seachName,
+      start_date: this.startDate,
+      end_date: this.endDate,
+      status: this.statu,
+      is_admin: this.is_admin,
     }
-
-    //名稱+狀態搜尋
-    if (statuSeach) {
-      let data2: PeriodicElement[] = []
-
-      for (let i = 0; i < data.length; i++) {
-        data.forEach((res) => {
-          if (res.name.indexOf(this.seachName) != -1) {
-            data2.push(res)
-          }
-        })
-        this.dataSource.data = data2
-        return
-      }
-    } else {
-      this.listData.forEach((res) => {
-        if (res.name.indexOf(this.seachName) != -1) {
-          data.push(res)
-        }
-      });
-    }
-    this.dataSource.data = data
+    this.search_and_set_quiz_status(search_req);
   }
 
   status(element: any) {

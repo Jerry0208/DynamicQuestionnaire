@@ -67,6 +67,7 @@ interface QuestArray {
   options: option[];
 }
 
+//選項陣列
 interface option {
   option: String;
   option_number: String;

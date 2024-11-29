@@ -35,7 +35,7 @@ export class CheckQuestionComponent {
 
     for (let i = 0; i < this.quiz.question_list.length; i++) {
       let res = {
-        quiz_id: this.quiz.question_list[i].quiz_id,
+        quiz_id: this.quiz.id,
         ques_id: this.quiz.question_list[i].ques_id,
         ques_name: this.quiz.question_list[i].ques_name,
         required: this.quiz.question_list[i].required,
@@ -55,10 +55,13 @@ export class CheckQuestionComponent {
       ques_list: options_to_String
     };
 
+    console.log(create_update_req);
+
+
     this.http.postApi('http://localhost:8080/quiz/create', create_update_req).subscribe(
       (res: any) => {
-        if (res.statusCode != 200) {
-          alert(res.statusCode + res.massege);
+        if (res.code != 200) {
+          alert(res.code + res.massage);
           return;
         }
 
