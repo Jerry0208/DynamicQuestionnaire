@@ -1,7 +1,7 @@
-import { QuesStatus } from './../service/quesStatus.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChartComponent } from './chart/chart.component';
+import { ControlTabComponent } from '../control-tab/control-tab.component';
 
 @Component({
   selector: 'app-statistics',
@@ -12,20 +12,24 @@ import { ChartComponent } from './chart/chart.component';
 })
 export class StatisticsComponent {
 
-  constructor(private router: Router, private quesStatus: QuesStatus) { }
+  constructor(private router: Router, private test: ControlTabComponent) { }
 
   //把原本在統計畫面上的返回畫面藏起來
-  showBackButton!: boolean;
-  test: string = ''
+  showBackButton: boolean = true;
+
+  quesStatus = sessionStorage.getItem("quesStatus")
+
   ngOnInit(): void {
-    if (this.quesStatus.showBackButton) {
-      this.showBackButton = true
-    } else {
+    if (this.router.url != "/statistics") {
       this.showBackButton = false
     }
+  }
 
-    if(this.quesStatus.showBackButton == undefined){
-      this.showBackButton = true
+  ques_status_check(quesStatus: any) {
+    if (quesStatus == "進行中"
+      || quesStatus == "已結束") {
+      this.showBackButton = false;
+      // this.tabLink.quesStatus(quesStatus);
     }
   }
 

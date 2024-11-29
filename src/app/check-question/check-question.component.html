@@ -35,27 +35,27 @@
     @for(quest of quiz.question_list; track $index){
       <li>
         <h5>
-          <span>{{ quiz.name }}</span>
-          @if (quest.is_necessary) {
+          <span>{{ quest.ques_name }}</span>
+          @if (quest.required) {
           <span style="color: red;">*</span>
           }
         </h5>
       </li>
       <!-- 多選: M 單選: S 文字輸入: T -->
       @if (quest.type == "M") {
-        @for (option of quest.option_list; track $index) {
+        @for (item of quest.options; track $index) {
         <div>
           <input type="checkbox">
-          <span>{{option.name}}</span>
+          <span>{{item.option}}</span>
         </div><br>
       }
       }
       @if (quest.type == 'S') {
-        @for (option of quest.option_list; track $index) {
+        @for (item of quest.options; track $index) {
           <!-- radio注意要有name作為判斷這些radio是同一群組 -->
           <div>
-            <input type="radio" name="{{quest.title}}">
-            <span>{{option.name}}</span>
+            <input type="radio" name="{{quest.ques_name}}">
+            <span>{{item.option}}</span>
           </div><br>
         }
       }
@@ -68,10 +68,10 @@
 
   <div style="text-align: right;">
     <!-- 返回鍵 -->
-    <button style="margin-right: 25px;" (click)="goBack()">返回</button>
+    <button style="margin-right: 25px;" (click)="go_back()">返回</button>
     <!-- 僅存檔(不公布)鍵(返回list) -->
-    <button (click)=" PubAndSaveData()" style="margin-right: 25px;">存檔並公布</button>
+    <button (click)=" save_data(true)" style="margin-right: 25px;">存檔並公布</button>
     <!-- 存檔並公布鍵(返回list) -->
-    <button (click)="saveData()">僅存檔</button>
+    <button (click)="save_data(false)">僅存檔</button>
   </div><br>
 </div>

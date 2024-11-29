@@ -8,7 +8,7 @@ import { AddListComponent } from './add-list/add-list.component';
 import { ControlTabComponent } from './control-tab/control-tab.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { AddList2Component } from './add-list2/add-list2.component';
-import { AnserPageRefreashComponent } from './anser-page-refreash/anser-page-refreash.component';
+import { AnserPageRefreashComponent } from './anser_page-refreash/anser-page-refreash.component';
 import { CheckQuestionComponent } from './check-question/check-question.component';
 import { LookAnserComponent } from './look-anser/look-anser.component';
 

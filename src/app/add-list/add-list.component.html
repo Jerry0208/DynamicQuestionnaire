@@ -4,12 +4,12 @@
   <div class="date d-flex justify-content-center">
     <div class="steatDate">
       <span>開始日期 : </span>
-      <input class="data_s" type="date" id="start" min="{{defaultDate}}" [(ngModel)]="sDate"
+      <input class="data_s" type="date" id="start" min="{{defaultDate}}" [(ngModel)]="start_date"
         (change)="start_date_detector()" />
     </div>
     <div class="endDate">
       <span>結束日期 : </span>
-      <input class="data_e" type="date" id="end" [min]="sDate" [(ngModel)]="eDate" [disabled]="eDateMaker"/>
+      <input class="data_e" type="date" id="end" [min]="start_date" [(ngModel)]="end_date" [disabled]="end_date_maker"/>
     </div>
   </div>
 
@@ -18,13 +18,13 @@
   <div class="quesCss ">
     <div class="questionName d-flex justify-content-center">
       <span style="margin-right: 5px;">問卷名稱:</span>
-      <input type="text" style="width: 90%;" [(ngModel)]="title">
+      <input type="text" style="width: 90%;" [(ngModel)]="name">
     </div>
 
     <!-- 問卷介紹 -->
     <div class="questionDescribe d-flex justify-content-center">
       <span class="align-self-center" style="margin-right: 5px;">問卷描述:</span>
-      <textarea name="questionDescribe" [(ngModel)]="explain"
+      <textarea name="questionDescribe" [(ngModel)]="description"
         style="width: 90%; resize: vertical; min-height: 100px; max-height: 500px;"></textarea>
     </div>
 

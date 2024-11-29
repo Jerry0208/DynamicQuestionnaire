@@ -42,6 +42,7 @@
   .search_date {
     width: 100%;
     margin-left: 25px;
+    position: relative;
 
     .data_s {
       margin-left: 10px;
@@ -63,6 +64,20 @@
       text-align: center;
       font-size: 18px;
     }
+  }
+
+  .search_status {
+    position: absolute;
+    left: 0;
+  }
+
+  .search_button {
+    position: absolute;
+    right: 75px;
+  }
+
+  .statuCss {
+    margin-left: 200px;
   }
 }
 

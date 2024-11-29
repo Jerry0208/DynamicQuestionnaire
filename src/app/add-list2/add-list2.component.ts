@@ -11,11 +11,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export interface questionTemp {
-  id: number;
-  title: string;
-  is_necessary: boolean;
+  quiz_id: number;
+  ques_id: number;
+  ques_name: string;
+  required: boolean;
   type: string;
-  option_list : any;
+  options: any;
 }
 
 @Component({
@@ -38,28 +39,52 @@ export interface questionTemp {
 export class AddList2Component {
 
   constructor(private router: Router, private newQuest: New_question, private tabLink: ControlTabComponent) { }
+  //問卷id
+  quiz_id: number = 0;
+  //問題Id
+  ques_id: number = 0;
+  //問題名
+  ques_name !: string;
+  //必填欄位
+  required: boolean = false;
 
-  //接網頁資料 ngModle
-  id: number = 0;
-
-  title !: string;
-
-  is_necessary: boolean = false;
-
-  type : string = 'S';
-
-  options: string = '';
+  //預設單選(開啟動畫用)
+  type: string = 'S';
 
   //再編輯模式
   rewrite_mode: boolean = false
 
   //選擇題陣列
-  options_list: Array<string> = ['',''];
+  options_list: Array<string> = ['', ''];
 
+
+  //table
+  displayedColumns: string[] = ['select', 'ques_id', 'ques_name', 'type', 'required', 'rewrite'];
+  dataSource = new MatTableDataSource<questionTemp>();
+  //table selection
+  selection = new SelectionModel<questionTemp>(true, []);
+
+  ngOnInit(): void {
+    this.tabLink.switchTab('/control_tab/add_list2')
+    this.tabLink.quesStatus(sessionStorage.getItem("quesStatus"))
+    //把寫好的資料放回去
+    this.recreate();
+    this.ques_id = this.dataSource.data.length;
+  }
+
+  // 在ngOnInit裡如果有資料就放入
+  recreate() {
+    if (!this.newQuest) {
+      return;
+    }
+    this.dataSource.data = this.newQuest.question_list;
+    this.quiz_id = this.newQuest.id;
+  }
   //增加選項
   autoArrayGenerater() {
-    if(this.options_list.length >= 10){
-      alert("選項最多10個");
+    //限制一題選項最多10
+    if (this.options_list.length >= 10) {
+      alert("選項最多10個!!");
       return;
     }
 
@@ -72,33 +97,13 @@ export class AddList2Component {
   }
 
   //關閉選項
-  closeOption(){
-    if(this.type == "T" || this.type == ''){
+  closeOption() {
+    if (this.type == "T" || this.type == '') {
       return true;
     }
     return false
   }
 
-  //table
-  displayedColumns: string[] = ['select', 'id', 'title', 'type', 'is_necessary', 'rewrite'];
-  dataSource = new MatTableDataSource<questionTemp>();
-  //table selection
-  selection = new SelectionModel<questionTemp>(true, []);
-
-  ngOnInit(): void {
-    this.tabLink.switchTab('/control_tab/add_list2')
-    //把寫好的資料放回去
-    this.recreate();
-    this.id = this.dataSource.data.length;
-  }
-
-  recreate() {
-    if (this.newQuest) {
-      this.dataSource.data = this.newQuest.question_list
-    }
-  }
-
-  //以下註解有英文的都不是很懂，要問老師。考察:類似沒全選時全選 跟 全選時取消全選
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -118,7 +123,7 @@ export class AddList2Component {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.ques_id + 1}`;
   }
 
   //當從選擇題變成短述題時將this.optionsArray(選擇題欄位)清空
@@ -126,9 +131,9 @@ export class AddList2Component {
   resetQuest() {
     if (this.type == 'T') {
       this.options_list = [];
-    }else{
-      if(this.options_list.length <= 0) {
-        this.options_list = ['','']
+    } else {
+      if (this.options_list.length <= 0) {
+        this.options_list = ['', '']
       }
     }
   }
@@ -137,18 +142,18 @@ export class AddList2Component {
   changeTypeName(type: string) {
 
     if (type == 'S') {
-      return '單選題'
+      return '單選題';
     }
 
     if (type == 'M') {
-      return '複選題'
+      return '複選題';
     }
 
     if (type == 'T') {
-      return '短述題'
+      return '短述題';
     }
 
-    return
+    return;
 
   }
 
@@ -161,13 +166,13 @@ export class AddList2Component {
     // 清除選取狀態
     this.selection.clear();
 
-    // questId重新排序
+    // ques_id重新排序
     this.dataSource.data = this.dataSource.data.map((element, index) => ({
-      ...element, questId: index + 1
+      ...element, ques_id: index + 1
     }))
 
-    //questId數字更新為當前長度
-    this.id = this.dataSource.data.length;
+    //ques_id數字更新為當前長度
+    this.ques_id = this.dataSource.data.length;
 
   }
 
@@ -176,27 +181,29 @@ export class AddList2Component {
   add_row() {
 
     // 判斷是否都已填寫
-    if(this.form_not_complete()) {
+    if (this.form_not_complete()) {
       return
     }
 
     //將陣列內的內容依序取出，做成JSON個後加入 optionsArray 陣列中
-    let option_list: {}[] = [];
+    let options: {}[] = [];
     for (let i = 0; i < this.options_list.length; i++) {
-      let toJSON = { name: this.options_list[i], code: String.fromCharCode(65 + i) }
-      option_list.push(toJSON)
+      let toJSON = { option: this.options_list[i], option_number: i + 1 }
+      options.push(toJSON)
     }
 
     if (this.rewrite_mode) {
 
       //將newQues 放入 Table 內
-      let newQues = { id: this.id, title: this.title, is_necessary: this.is_necessary, type: this.type, option_list: option_list };
+      let newQues = { quiz_id: this.quiz_id, ques_id: this.ques_id, ques_name: this.ques_name, required: this.required, type: this.type, options: options };
 
       //取代原本的數據
-      this.dataSource.data[this.id - 1] = newQues;
+      this.dataSource.data[this.ques_id - 1] = newQues;
+      //多一條這是因為上一條數據進去之後，畫面會有可能會不急渲染，所以以防萬一讓this.dataSource.data 再讀一次自己的數據
+      this.dataSource.data = [...this.dataSource.data];
 
       //Id 長度回復為陣列總長
-      this.id = this.dataSource.data.length;
+      this.ques_id = this.dataSource.data.length;
 
       //關閉 rewriteMode
       this.rewrite_mode = false;
@@ -204,23 +211,23 @@ export class AddList2Component {
     } else {
 
       //id 增加
-      this.id += 1;
+      this.ques_id += 1;
 
       //將newQues 放入 Table 內
-      let newQues = { id: this.id, title: this.title, is_necessary: this.is_necessary, type: this.type, option_list: option_list };
+      let newQues = { quiz_id: this.quiz_id, ques_id: this.ques_id, ques_name: this.ques_name, required: this.required, type: this.type, options: options };
 
       this.dataSource.data = [...this.dataSource.data, newQues];
 
     }
 
     //清空輸入欄位
-    this.title = '';
+    this.ques_name = '';
 
     this.type = '';
 
-    this.is_necessary = false;
+    this.required = false;
 
-    this.options_list = ['',''];
+    this.options_list = ['', ''];
 
   }
 
@@ -228,18 +235,17 @@ export class AddList2Component {
   rewrite(element: any) {
 
     //把值透過 ngModle 放回畫面上
-    this.id = element.questId;
+    this.ques_id = element.ques_id;
 
-    this.title = element.questName;
+    this.ques_name = element.ques_name;
 
     this.type = element.type;
 
-    this.is_necessary = element.need;
+    this.required = element.required;
 
     // 跑迴圈把陣列中的 optionName push 回optionsArray，顯示在網頁上
     for (let i = 0; i < element.options.length; i++) {
-      // this.optionsArray.push(element.options[i].optionName)
-      this.options_list[i] = (element.options[i].optionName)
+      this.options_list[i] = (element.options[i].option)
     }
 
     //在開啟編輯模式
@@ -253,7 +259,7 @@ export class AddList2Component {
   //必填判斷
   form_not_complete() {
 
-    if (!this.title) {
+    if (!this.ques_name) {
       alert('請填寫題目')
       return true
     }
@@ -286,7 +292,6 @@ export class AddList2Component {
   }
 
   toCheck() {
-
     if (this.dataSource.data.length == 0) {
       alert('請填寫問卷內容')
       return

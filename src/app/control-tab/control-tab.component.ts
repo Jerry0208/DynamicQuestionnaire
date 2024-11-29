@@ -24,7 +24,7 @@ export class ControlTabComponent {
     this.activeLink = event
   }
 
-  quesStatus(status: string) {
+  quesStatus(status: any) {
     //讓狀態是已結束和進行中的問卷內容不能被修改
     if (status == '已結束' || status == '進行中') {
       this.links[0].hide = true;

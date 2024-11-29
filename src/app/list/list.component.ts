@@ -1,21 +1,22 @@
 import { SelectionModel } from '@angular/cdk/collections';//table check box
 import { CommonModule } from '@angular/common';//更改按鍵顏色
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';//table 顯示頁數:ViewChild、AfterViewInit
+import { AfterViewInit, ChangeDetectorRef, Component, inject, ViewChild } from '@angular/core';//table 顯示頁數:ViewChild、AfterViewInit
 import { FormsModule } from '@angular/forms';//ngmodule
 import { MatCheckboxModule } from '@angular/material/checkbox';//check box module
 import { MatIconModule } from '@angular/material/icon';//icon
 import { MatPaginator } from '@angular/material/paginator';//list換頁用
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';// table
 import { RouterLink, RouterLinkActive } from '@angular/router';//router
-import { QuesStatus } from '../service/quesStatus.service';
+import { MatDialog } from '@angular/material/dialog'; // mat dialog
+import { DialogContent } from '../dialog/dialog';
 
 
 export interface PeriodicElement {
   id: number;
-  title: string;
+  name: string;
   status: string;
-  sDate: string;
-  eDate: string;
+  start_date: string;
+  end_date: string;
 }
 
 
@@ -40,7 +41,7 @@ export interface PeriodicElement {
 
 export class ListComponent implements AfterViewInit {
 
-  constructor(private quesStatus: QuesStatus, private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef) { }
   //日期選擇範圍
   startDate: string = "";
   endDate: string = "";
@@ -54,72 +55,81 @@ export class ListComponent implements AfterViewInit {
   //搜索問卷狀態
   statu: string = "";
 
+  //日期搜尋:ture, 狀態搜尋:false
+  is_date_seach: boolean = true;
+
+  // 將 MatDialog 注入 dialog
+  readonly dialog = inject(MatDialog);
+
+  //狀態搜尋按鈕
+  seach_status_active_list: string[] = ["", "", "", ""];
+
   //假資料
   listData: PeriodicElement[] = [
     {
-      id: 1, title: "市場調查01", status: "已結束", sDate: "2024-01-01", eDate: "2024-03-31",
+      id: 1, name: "市場調查01", status: "已結束", start_date: "2024-01-01", end_date: "2024-03-31",
     },
     {
-      id: 2, title: "市場調查02", status: "已結束", sDate: "2024-04-01", eDate: "2024-06-30",
+      id: 2, name: "市場調查02", status: "已結束", start_date: "2024-04-01", end_date: "2024-06-30",
     },
     {
-      id: 3, title: "市場調查03", status: "進行中", sDate: "2024-07-01", eDate: "2024-10-30",
+      id: 3, name: "市場調查03", status: "進行中", start_date: "2024-07-01", end_date: "2024-10-30",
     },
     {
-      id: 4, title: "價格調查01", status: "已結束", sDate: "2024-01-01", eDate: "2024-03-31",
+      id: 4, name: "價格調查01", status: "已結束", start_date: "2024-01-01", end_date: "2024-03-31",
     },
     {
-      id: 5, title: "價格調查02", status: "已結束", sDate: "2024-04-01", eDate: "2024-06-30",
+      id: 5, name: "價格調查02", status: "已結束", start_date: "2024-04-01", end_date: "2024-06-30",
     },
     {
-      id: 6, title: "價格調查03", status: "尚未開始", sDate: "2024-11-01", eDate: "2024-12-31",
+      id: 6, name: "價格調查03", status: "尚未開始", start_date: "2024-11-01", end_date: "2024-12-31",
     },
     {
-      id: 7, title: "興趣調查01", status: "已結束", sDate: "2024-01-01", eDate: "2024-03-31",
+      id: 7, name: "興趣調查01", status: "已結束", start_date: "2024-01-01", end_date: "2024-03-31",
     },
     {
-      id: 8, title: "興趣調查02", status: "已結束", sDate: "2024-04-01", eDate: "2024-06-30",
+      id: 8, name: "興趣調查02", status: "已結束", start_date: "2024-04-01", end_date: "2024-06-30",
     },
     {
-      id: 9, title: "興趣調查03", status: "尚未公布", sDate: "2024-11-01", eDate: "2024-12-31",
+      id: 9, name: "興趣調查03", status: "尚未公布", start_date: "2024-11-01", end_date: "2024-12-31",
     },
     {
-      id: 10, title: "年度調查01", status: "進行中", sDate: "2024-07-01", eDate: "2024-10-30"
+      id: 10, name: "年度調查01", status: "進行中", start_date: "2024-07-01", end_date: "2024-10-30"
     },
     {
-      id: 11, title: "市場調查04", status: "進行中", sDate: "2024-10-15", eDate: "2025-01-15",
+      id: 11, name: "市場調查04", status: "進行中", start_date: "2024-10-15", end_date: "2025-01-15",
     },
     {
-      id: 12, title: "價格調查04", status: "已結束", sDate: "2024-05-01", eDate: "2024-07-31",
+      id: 12, name: "價格調查04", status: "已結束", start_date: "2024-05-01", end_date: "2024-07-31",
     },
     {
-      id: 13, title: "市場分析01", status: "進行中", sDate: "2024-09-01", eDate: "2024-12-31",
+      id: 13, name: "市場分析01", status: "進行中", start_date: "2024-09-01", end_date: "2024-12-31",
     },
     {
-      id: 14, title: "興趣調查04", status: "尚未開始", sDate: "2025-01-01", eDate: "2025-03-31",
+      id: 14, name: "興趣調查04", status: "尚未開始", start_date: "2025-01-01", end_date: "2025-03-31",
     },
     {
-      id: 15, title: "市場趨勢01", status: "已結束", sDate: "2023-11-01", eDate: "2024-01-31",
+      id: 15, name: "市場趨勢01", status: "已結束", start_date: "2023-11-01", end_date: "2024-01-31",
     },
     {
-      id: 16, title: "年度調查02", status: "進行中", sDate: "2024-08-01", eDate: "2024-12-31",
+      id: 16, name: "年度調查02", status: "進行中", start_date: "2024-08-01", end_date: "2024-12-31",
     },
     {
-      id: 17, title: "需求調查01", status: "尚未開始", sDate: "2025-02-01", eDate: "2025-04-30",
+      id: 17, name: "需求調查01", status: "尚未開始", start_date: "2025-02-01", end_date: "2025-04-30",
     },
     {
-      id: 18, title: "價格趨勢01", status: "進行中", sDate: "2024-09-01", eDate: "2024-12-01",
+      id: 18, name: "價格趨勢01", status: "進行中", start_date: "2024-09-01", end_date: "2024-12-01",
     },
     {
-      id: 19, title: "年度調查03", status: "尚未開始", sDate: "2025-01-01", eDate: "2025-04-30",
+      id: 19, name: "年度調查03", status: "尚未開始", start_date: "2025-01-01", end_date: "2025-04-30",
     },
     {
-      id: 20, title: "市場調查05", status: "進行中", sDate: "2024-10-01", eDate: "2025-01-01",
+      id: 20, name: "市場調查05", status: "進行中", start_date: "2024-10-01", end_date: "2025-01-01",
     }
   ];
 
   //table名、table資料來源
-  displayedColumns: string[] = ['id', 'title', 'status', 'sDate', 'eDate', 'statistics'];
+  displayedColumns: string[] = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
   dataSource = new MatTableDataSource<PeriodicElement>(this.listData);
 
   selection = new SelectionModel<PeriodicElement>(true, []);
@@ -141,10 +151,10 @@ export class ListComponent implements AfterViewInit {
     //保持當前的使用的模式
     if (sessionStorage.getItem("mode") == "true") {
       this.mode = true
-      this.displayedColumns = ['select', 'id', 'title', 'status', 'sDate', 'eDate', 'statistics']
+      this.displayedColumns = ['select', 'id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
     } else {
       this.mode = false
-      this.displayedColumns = ['id', 'title', 'status', 'sDate', 'eDate', 'statistics']
+      this.displayedColumns = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
     }
 
     this.cdr.detectChanges(); // 手動觸發檢測
@@ -152,22 +162,34 @@ export class ListComponent implements AfterViewInit {
 
   masterMode() {
     this.mode = true
-    this.displayedColumns = ['select', 'id', 'title', 'status', 'sDate', 'eDate', 'statistics']
+    this.displayedColumns = ['select', 'id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
     sessionStorage.setItem("mode", "true")
   }
   normalMode() {
     this.mode = false
-    this.displayedColumns = ['id', 'title', 'status', 'sDate', 'eDate', 'statistics']
+    this.displayedColumns = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
     sessionStorage.setItem("mode", "false")
   }
 
   //刪除列表
   deleteSelectedRows() {
-    // 濾除被選取的資料列
-    this.dataSource.data = this.dataSource.data.filter(row => !this.selection.isSelected(row));
-
-    // 清除選取狀態
-    this.selection.clear();
+    // 開起 dialog，open 裡面的 dialog 的 class 名稱跟要傳過去的內容
+    const dialogRef = this.dialog.open(DialogContent, {
+      data: '確定要刪除已選擇的問卷?',
+      //設定長、寬
+      height: "20%",
+      width: "20%",
+    });
+    //在Dialog關閉時接到的回傳內容
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+      // 濾除被選取的資料列
+      this.dataSource.data = this.dataSource.data.filter(row => !this.selection.isSelected(row));
+      // 清除選取狀態
+      this.selection.clear();
+    });
   }
 
 
@@ -178,7 +200,7 @@ export class ListComponent implements AfterViewInit {
     // as HTMLInputElement 轉型，之後才能使用.value
     // console.log((event.target as HTMLInputElement).value)
     this.listData.forEach((res) => {
-      if (res.title.indexOf((event.target as HTMLInputElement).value) != -1) {
+      if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
         data.push(res)
       }
     });
@@ -212,19 +234,17 @@ export class ListComponent implements AfterViewInit {
       let data2: PeriodicElement[] = []
 
       for (let i = 0; i < data.length; i++) {
-
         data.forEach((res) => {
-          if (res.title.indexOf(this.seachName) != -1) {
+          if (res.name.indexOf(this.seachName) != -1) {
             data2.push(res)
           }
         })
         this.dataSource.data = data2
         return
-
       }
     } else {
       this.listData.forEach((res) => {
-        if (res.title.indexOf(this.seachName) != -1) {
+        if (res.name.indexOf(this.seachName) != -1) {
           data.push(res)
         }
       });
@@ -232,25 +252,47 @@ export class ListComponent implements AfterViewInit {
     this.dataSource.data = data
   }
 
-  //顯示用戶統計頁的返回按鍵
-  showBackButton() {
-    this.quesStatus.showBackButton = true
-  }
-
   status(element: any) {
     //取得問卷狀態，依狀態讓問卷可編輯或是不可編輯
-    this.quesStatus.quesStatus = element
-    this.quesStatus.showBackButton = false
-    console.log(this.quesStatus.quesStatus);
-
+    sessionStorage.setItem("quesStatus", element)
   }
   addQues() {
-    this.quesStatus.quesStatus = 'new'
+    sessionStorage.setItem("quesStatus", "new")
+  }
+
+  //轉換依日期搜選或是以問卷狀態搜尋
+  change_date_seach() {
+    this.is_date_seach = !this.is_date_seach;
+    //轉換到依日期搜選時將依問卷狀態搜尋所要用到的參數初始化
+    if (this.is_date_seach) {
+      this.seach_status_active_list = ["", "", "", ""];
+      this.statu = "";
+    }
   }
 
   //取得問卷資訊(之後要傳到後台)
   quesInfo(element: any) {
     console.log(element);
+  }
+
+  seach_status_is(position: number, statu: string) {
+    // 消除非選中的問卷狀態的 active 狀態
+    for (let i = 0; i <= 3; i++) {
+      if (position != i) {
+        this.seach_status_active_list[i] = "";
+      }
+    }
+
+    // 如果以選取的狀態再次被選取則取消 active 狀態並將要搜尋的問卷狀態消除
+    if (this.seach_status_active_list[position]) {
+      this.seach_status_active_list[position] = "";
+      this.statu = "";
+      return;
+    }
+
+    // 將被選中的問卷狀態 active 起來並將要搜尋的問卷狀態紀錄
+    this.seach_status_active_list[position] = "active";
+    this.statu = statu;
   }
 
 }

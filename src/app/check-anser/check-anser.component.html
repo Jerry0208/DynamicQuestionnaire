@@ -1,47 +1,47 @@
 <br><br>
 <div class="content">
   <div>
-    <h5> 問卷時間: {{quest.sDate}} ~ {{quest.eDate}} </h5>
-    <h2 style="text-align: center;"> {{quest.title}} </h2>
+    <h5> 問卷時間: {{quest.start_date}} ~ {{quest.end_date}} </h5>
+    <h2 style="text-align: center;"> {{quest.name}} </h2>
     <div style="margin: 5% 0px;">
-      <span> {{quest.explain}} </span>
+      <span> {{quest.description}} </span>
     </div>
   </div>
   <div>
     <div>
       <span style="color: red;">*</span>
-      <label>名稱 : {{quest.userName}} </label>
+      <label>名稱 : {{quest.user_name}} </label>
     </div><br>
     <div>
       <span style="color: red;">*</span>
-      <label>手機 : {{quest.userPhone}}</label>
+      <label>手機 : {{quest.user_phone}}</label>
     </div><br>
     <div>
       <span style="color: red;">*</span>
-      <label>信箱 : {{quest.userEmail}} </label>
+      <label>信箱 : {{quest.user_email}} </label>
     </div><br>
     <div>
-      <label style="margin-left: 20px;">年齡 : {{quest.userAge}}</label>
+      <label style="margin-left: 20px;">年齡 : {{quest.user_age}}</label>
     </div><br>
   </div>
   <div>
     @for (answer of quest.questArray; track $index) {
     <hr>
-    <h5>{{answer.questId}}. {{answer.questName}} </h5>
+    <h5>{{answer.topic_id}}. {{answer.topic_name}} </h5>
     <div class="d-flex flex-wrap justify-content-start">
       @if (answer.type == 'M') {
       @for (option of answer.options; track $index) {
-      @if (option.boxBoolean) {
+      @if (option.box_boolean) {
       <span>●{{option.optionName}}</span>
       }
       }
       }
     </div>
     @if (answer.type == "S") {
-    @for (answerS of answer.options; track $index) {
-    @if(answerS.code == answer.radioAnswer){
+    @for (answer of answer.options; track $index) {
+    @if(answer.code == answer.radio_answer){
     <br>
-    <span> {{answerS.optionName}} </span>
+    <span> {{answer.optionName}} </span>
     }
     }
     }
