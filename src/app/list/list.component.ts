@@ -90,11 +90,11 @@ export class ListComponent implements AfterViewInit {
   //狀態搜尋按鈕 active
   seach_status_active_list: string[] = ["", "", "", ""];
 
-  listData: ListElement[] = [];
-
+  // table 列表名稱
   displayedColumns: string[] = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
-  dataSource = new MatTableDataSource<ListElement>(this.listData);
-
+  // table 資料陣列
+  dataSource = new MatTableDataSource<ListElement>();
+  // table check box 選取 功能
   selection = new SelectionModel<ListElement>(true, []);
 
   //顯示頁數
@@ -152,12 +152,24 @@ export class ListComponent implements AfterViewInit {
       height: "20%",
       width: "20%",
     });
+
+    // 將 quiz id 取出
+    const quiz_id_list = this.dataSource.data
+      //將被選取的欄位過濾出來
+      .filter(row => this.selection.isSelected(row))
+      // map 遍歷將 quiz id 取出
+      .map(item => item.id);
+
+    const deletreq = { quiz_id_list : quiz_id_list}
     //在Dialog關閉時接到的回傳內容
     dialogRef.afterClosed().subscribe(result => {
       if (!result) {
         return;
       }
-      // 濾除被選取的資料列
+      // 刪除資料庫資料
+      this.http.post('http://localhost:8080/quiz/delete', deletreq).subscribe();
+
+      // 前端濾除被選取的資料列
       this.dataSource.data = this.dataSource.data.filter(row => !this.selection.isSelected(row));
       // 清除選取狀態
       this.selection.clear();
