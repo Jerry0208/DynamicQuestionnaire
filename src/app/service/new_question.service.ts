@@ -25,6 +25,7 @@ export class New_question implements question_data {
 
 
   reset() {
+    this.id = 0;
     this.name = '';
     this.description = '';
     this.start_date = new Date();
@@ -44,8 +45,8 @@ interface question_data {
   //問卷描述
   description: string;
   //起迄日期
-  start_date: Date;
-  end_date: Date;
+  start_date: Date | null;
+  end_date: Date | null;
   //問卷內容
   question_list: QuestArray[];
 

@@ -9,7 +9,8 @@
     </div>
     <div class="endDate">
       <span>結束日期 : </span>
-      <input class="data_e" type="date" id="end" [min]="start_date" [(ngModel)]="end_date" [disabled]="end_date_maker"/>
+      <input class="data_e" type="date" id="end" [min]="start_date" [(ngModel)]="end_date" [disabled]="end_date_maker"
+        (change)="start_date_detector()" />
     </div>
   </div>
 

@@ -55,22 +55,38 @@ export class CheckQuestionComponent {
       ques_list: options_to_String
     };
 
-    console.log(create_update_req);
+    let create_or_update: string = "";
+    if (create_update_req.id == 0) {
+      create_or_update = 'http://localhost:8080/quiz/create'
+    } else {
+      create_or_update = 'http://localhost:8080/quiz/update'
+    }
 
 
-    this.http.postApi('http://localhost:8080/quiz/create', create_update_req).subscribe(
+    this.http.postApi(create_or_update, create_update_req).subscribe(
       (res: any) => {
         if (res.code != 200) {
-          alert(res.code + res.massage);
+          alert("新增或更新失敗: " + res.massage);
           return;
         }
 
-        //依 是否公布 回復
-        if (is_published) {
-          alert('存檔並公布成功!');
+        // 依是否為更新回復
+        if (create_update_req.id = 0) {
+          //依是否為公布回復
+          if (is_published) {
+            alert('新增並公布成功!');
+          } else {
+            alert('僅新增成功!');
+          }
         } else {
-          alert('僅存檔成功!');
+          //依是否為公布回復
+          if (is_published) {
+            alert('更新並公布成功!');
+          } else {
+            alert('僅更新成功!');
+          }
         }
+
         //清空 service
         this.questions_service.reset();
         //返回首頁
@@ -78,8 +94,6 @@ export class CheckQuestionComponent {
 
       }
     )
-
-
 
   }
 

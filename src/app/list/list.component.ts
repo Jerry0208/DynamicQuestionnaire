@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http'; // 發送 hyyt api
 import { SelectionModel } from '@angular/cdk/collections';//table check box
 import { CommonModule } from '@angular/common';//更改按鍵顏色
-import { AfterViewInit, ChangeDetectorRef, Component, inject, ViewChild } from '@angular/core';//table 顯示頁數:ViewChild、AfterViewInit
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';//table 顯示頁數:ViewChild、AfterViewInit
 import { FormsModule } from '@angular/forms';//ngmodule
 import { MatCheckboxModule } from '@angular/material/checkbox';//check box module
 import { MatIconModule } from '@angular/material/icon';//icon
@@ -9,9 +9,10 @@ import { MatPaginator } from '@angular/material/paginator';//list換頁用
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';// table
 import { RouterLink, RouterLinkActive } from '@angular/router';//router
 import { MatDialog } from '@angular/material/dialog'; // mat dialog
-import { DialogContent } from '../dialog/dialog';
-import moment from 'moment';
-import { LoadingService } from '../service/loading.service';
+import { DialogContent } from '../dialog/dialog'; // dialog
+import moment from 'moment'; // 比較日期
+import { LoadingService } from '../service/loading.service'; // loading
+import { New_question } from '../service/new_question.service'; // 換頁傳輸問卷檔案的 service
 
 
 export interface ListElement {
@@ -20,6 +21,7 @@ export interface ListElement {
   status: string;
   start_date: Date;
   end_date: Date;
+  description: string;
 }
 
 export interface search_res {
@@ -60,7 +62,12 @@ export interface quiz_list {
 
 export class ListComponent implements AfterViewInit {
 
-  constructor(private cdr: ChangeDetectorRef, private http: HttpClient, private loadingService: LoadingService) { }
+  constructor(
+    private http: HttpClient,
+    private loadingService: LoadingService,
+    private quesTemp: New_question
+  ) { }
+
   //日期選擇範圍
   startDate!: Date;
   endDate!: Date;
@@ -94,8 +101,7 @@ export class ListComponent implements AfterViewInit {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
-  ngAfterViewInit(): void {
-
+  ngOnInit(): void {
     //保持當前的使用的模式
     if (sessionStorage.getItem("is_admin") == "true") {
       this.is_admin = true
@@ -104,13 +110,14 @@ export class ListComponent implements AfterViewInit {
       this.is_admin = false
       this.displayedColumns = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
     }
-
     //搜尋全部問卷,並把內容呈現在畫面上
     let search_req = {
       is_admin: this.is_admin
     }
     this.search_and_set_quiz_status(search_req);
+  }
 
+  ngAfterViewInit(): void {
     //顯示頁數、將預設顯示的英文更改成中文
     this.dataSource.paginator = this.paginator;
     this.dataSource.paginator._intl.itemsPerPageLabel = "顯示筆數:"
@@ -118,15 +125,13 @@ export class ListComponent implements AfterViewInit {
     this.dataSource.paginator._intl.previousPageLabel = "上一頁"
     this.dataSource.paginator._intl.nextPageLabel = "下一頁"
     this.dataSource.paginator._intl.lastPageLabel = "最後一頁"
-
-
   }
 
   to_admin() {
     this.is_admin = true
     this.displayedColumns = ['select', 'id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
     sessionStorage.setItem("is_admin", "true")
-    let search_req = {is_admin: this.is_admin}
+    let search_req = { is_admin: this.is_admin }
     this.search_and_set_quiz_status(search_req);
 
   }
@@ -134,7 +139,7 @@ export class ListComponent implements AfterViewInit {
     this.is_admin = false
     this.displayedColumns = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
     sessionStorage.setItem("is_admin", "false")
-    let search_req = { is_admin: this.is_admin}
+    let search_req = { is_admin: this.is_admin }
     this.search_and_set_quiz_status(search_req);
   }
 
@@ -159,28 +164,13 @@ export class ListComponent implements AfterViewInit {
     });
   }
 
-
-  //模糊搜尋:只能搜尋到由API接過來的資料，沒辦法搜尋到資料庫所有資料
-  //即時模糊搜尋功能 By input event
-  changeInput(event: Event) {
-    let data: ListElement[] = []
-    // as HTMLInputElement 轉型，之後才能使用.value
-    // console.log((event.target as HTMLInputElement).value)
-    this.listData.forEach((res) => {
-      if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
-        data.push(res)
-      }
-    });
-    //table吃的資料dataSource
-    this.dataSource.data = data
-  }
-
   //讓問卷依時間給予狀態
   search_and_set_quiz_status(search_req: any) {
     let creach_res!: search_res;
     this.loadingService.show();
     this.http.post('http://localhost:8080/quiz/search', search_req).subscribe((res: any) => {
       creach_res = res;
+
       // 加入問卷狀態:
       // 1.如果 is_published 為 false = 尚未公布
       // 2.現在時間 < 開始時間 = 尚未開始
@@ -214,18 +204,39 @@ export class ListComponent implements AfterViewInit {
 
       let quizlist: ListElement[] = [];
       creach_res.quiz_list.forEach(item => {
-        let list_element: ListElement = {
+        let list_element = {
           id: item.id,
           name: item.name,
           status: item.status,
           start_date: item.start_date,
           end_date: item.end_date,
+          description: item.description
         }
         quizlist.push(list_element)
       });
       this.dataSource.data = quizlist;
       this.loadingService.hide();
     })
+  }
+
+
+  // 使用者模式: 取得問卷資訊(之後要傳到後台)
+  quesInfo(element: number) {
+    console.log(element);
+  }
+
+  // 管理者模式: 前往問卷回饋畫面
+  to_statistics(element_id: number) {
+
+  }
+  // 管理者模式: 將在 list 中的問卷基本資訊帶到 quesTemp 後前往更新畫面
+  to_update(element: ListElement) {
+    this.quesTemp.id = element.id;
+    this.quesTemp.name = element.name;
+    this.quesTemp.description = element.description;
+    this.quesTemp.start_date = element.start_date;
+    this.quesTemp.end_date = element.end_date;
+
   }
 
   //按鈕搜尋 By ngMoudle
@@ -258,10 +269,6 @@ export class ListComponent implements AfterViewInit {
     }
   }
 
-  //取得問卷資訊(之後要傳到後台)
-  quesInfo(element: any) {
-    console.log(element);
-  }
 
   seach_status_is(position: number, statu: string) {
     // 消除非選中的問卷狀態的 active 狀態
