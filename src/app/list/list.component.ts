@@ -160,7 +160,7 @@ export class ListComponent implements AfterViewInit {
       // map 遍歷將 quiz id 取出
       .map(item => item.id);
 
-    const deletreq = { quiz_id_list : quiz_id_list}
+    const deletreq = { quiz_id_list: quiz_id_list }
     //在Dialog關閉時接到的回傳內容
     dialogRef.afterClosed().subscribe(result => {
       if (!result) {
@@ -178,53 +178,48 @@ export class ListComponent implements AfterViewInit {
 
   //讓問卷依時間給予狀態
   search_and_set_quiz_status(search_req: any) {
-    let creach_res!: search_res;
     this.loadingService.show();
     this.http.post('http://localhost:8080/quiz/search', search_req).subscribe((res: any) => {
-      creach_res = res;
+      const creach_res: search_res = res;
+
+      // 獲得現在日期 moment 可以直接透過方法比較日期
+      const now = moment().startOf('day'); // 當前日期的起始時間
 
       // 加入問卷狀態:
       // 1.如果 is_published 為 false = 尚未公布
       // 2.現在時間 < 開始時間 = 尚未開始
       // 3.現在時間 >= 開始時間 &&  現在時間 <= 結束時間 = 進行中
       // 4.現在時間 > 結束時間 = 已結束
-      for (let i = 0; i < creach_res.quiz_list.length; i++) {
-        // 獲得現在日期 moment 可以直接透過方法比較日期
-        let now: moment.Moment = moment();
-
-        //  is_published = false 為未公布
-        if (!creach_res.quiz_list[i].is_published) {
-          creach_res.quiz_list[i].status = "尚未公布";
+      for (const quiz of creach_res.quiz_list) {
+        if (!quiz.is_published) {
+          quiz.status = "尚未公布";
           continue;
         }
 
-        // moment.isBefore，現在日期比開始日期還早時，問卷狀態為尚未開始
-        if (now.isBefore(creach_res.quiz_list[i].start_date)) {
-          creach_res.quiz_list[i].status = "尚未開始";
-          continue;
-        }
+        const startDate = moment(quiz.start_date).startOf('day');
+        const endDate = moment(quiz.end_date).startOf('day');
 
-        //現在日期跟開始日期一樣或是在開始日期之後 且 現在日期跟結束日期一樣或是在結束時間之前，問卷狀態為進行中
-        if (now.isSameOrAfter(creach_res.quiz_list[i].start_date) && now.isSameOrBefore(creach_res.quiz_list[i].end_date)) {
-          creach_res.quiz_list[i].status = "進行中";
-          continue;
+        // 檢查狀態
+        if (now.isBefore(startDate)) {
+          quiz.status = "尚未開始";
+        } else if (now.isSameOrAfter(startDate) && now.isSameOrBefore(endDate)) {
+          quiz.status = "進行中";
+        } else {
+          quiz.status = "已結束";
         }
-
-        //剩餘問卷狀態為已結束
-        creach_res.quiz_list[i].status = "已結束";
       }
 
+      // 將 res 整理格式至 dataSource.data 後呈現在畫面上
       let quizlist: ListElement[] = [];
       creach_res.quiz_list.forEach(item => {
-        let list_element = {
+        quizlist.push({
           id: item.id,
           name: item.name,
           status: item.status,
           start_date: item.start_date,
           end_date: item.end_date,
           description: item.description
-        }
-        quizlist.push(list_element)
+        })
       });
       this.dataSource.data = quizlist;
       this.loadingService.hide();
@@ -253,7 +248,7 @@ export class ListComponent implements AfterViewInit {
 
   //按鈕搜尋 By ngMoudle
   seachNameButton() {
-    let search_req = {
+    const search_req = {
       name: this.seachName,
       start_date: this.startDate,
       end_date: this.endDate,

@@ -11,6 +11,12 @@
   }
 }
 
+.close_search_name{
+  position: absolute;
+  right: 7%;
+
+}
+
 .mode_on {
   color: red;
   background-color: white;
@@ -28,6 +34,7 @@
 
 
   .search_name {
+    position: relative;
     width: 800px;
     margin-bottom: 5px;
     margin-left: 25px;

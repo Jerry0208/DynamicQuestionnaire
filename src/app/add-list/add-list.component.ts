@@ -135,7 +135,7 @@ export class AddListComponent {
     this.description = this.quesTemp.description;
 
     // 設定如果開始時間跟結束時間如果比現在還要早時，將它設定成當日
-    let now: moment.Moment = moment();
+    const now = moment().startOf('day');
     if (now.isBefore(this.quesTemp.start_date)) {
       this.start_date = this.quesTemp.start_date;
     }
