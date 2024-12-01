@@ -75,20 +75,20 @@
 
     <!-- Checkbox Column -->
     @if (is_admin) {
-    <ng-container matColumnDef="select">
-      <th mat-header-cell *matHeaderCellDef>刪除</th>
-      <td mat-cell *matCellDef="let row">
-        @if(row.status == "進行中" || row.status == "已結束") {
-        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-          [checked]="selection.isSelected(row)" disabled="true">
-        </mat-checkbox>
-        }@else {
-        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-          [checked]="selection.isSelected(row)">
-        </mat-checkbox>
-        }
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>刪除</th>
+        <td mat-cell *matCellDef="let row">
+          @if(row.status == "進行中" || row.status == "已結束") {
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)" disabled="true">
+            </mat-checkbox>
+          }@else {
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          }
+        </td>
+      </ng-container>
     }
 
     <!-- ID Column -->
@@ -104,14 +104,14 @@
         @if (is_admin) {
           @if(element.status == "進行中" || element.status == "已結束"){
             <a routerLink="/control_tab/feedback" routerLinkActive="active"
-              (click)="status(element.status); to_statistics(element.id)" title="查看回饋統計">{{element.name}}</a>
+              (click)="status(element.status); to_statistics(element)" title="查看回饋統計">{{element.name}}</a>
           }@else {
             <a routerLink="/control_tab/add_list1" routerLinkActive="active"
               (click)="status(element.status); to_update(element)" title="問卷更新">{{element.name}}</a>
           }
         }@else{
           @if (element.status == "進行中") {<a routerLink="/new_anwser_page" routerLinkActive="active"
-                [title]="element.description" (click)="quesInfo(element.id)"> {{element.name}} </a> }
+                [title]="element.description" (click)="quesInfo(element)"> {{element.name}} </a> }
           @else { {{element.name}} }
         }
       </td>

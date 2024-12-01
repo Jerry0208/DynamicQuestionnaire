@@ -22,49 +22,49 @@
     <label>信箱 : </label>
     <input style="width: 50%;" placeholder="請輸入信箱" [(ngModel)]="user_email">
   </div><br>
-  <div style="margin-left: 9px;">
+  <div style="margin-left: 7px">
     <label>年齡 : </label>
-    <input style="width: 50%;" placeholder="請輸入年齡" [(ngModel)]="user_age">
+    <input style="width: 50.5%;" placeholder="請輸入年齡" [(ngModel)]="user_age" type="number" class="no-arrows" >
   </div>
   <br>
   <ol>
     @for(quest of newQuestArray; track $index){
-    <hr>
-    <li>
-      <h5>
-        {{ quest.topic_name }}
-        @if (quest.is_necessary) {
-        <span style="color: red;">*</span>
+      <hr>
+      <li>
+        <h5>
+          {{ quest.ques_name}}
+          @if (quest.required) {
+          <span style="color: red;">*</span>
+          }
+        </h5>
+      </li>
+
+      <!-- 多選: M 單選: S 文字輸入: T -->
+      @if (quest.type == "M") {
+        @for (op of quest.options; track $index) {
+          <div>
+            <input type="checkbox" [(ngModel)]="op.box_boolean">
+            <span> {{ op.option }}</span>
+          </div>
+
         }
-      </h5>
-    </li>
+      }
+      @if (quest.type == 'S') {
+        @for (op of quest.options; track $index) {
+          <!-- radio注意要有name作為判斷這些radio是同一群組 -->
+          <!-- value是選了這個選項對應的ngModel中的值 -->
+          <div>
+            <input type="radio" name="{{quest.ques_id}}" value={{op.option_number}} [(ngModel)]="quest.radio_answer">
+            {{ op.option }}
+          </div>
+        }
+      }
 
-    <!-- 多選: M 單選: S 文字輸入: T -->
-    @if (quest.type == "M") {
-    @for (option of quest.options; track $index) {
-    <div>
-      <input type="checkbox" [(ngModel)]="option.box_boolean">
-       <span> {{ option.optionName }}</span>
-    </div>
-
-    }
-    }
-    @if (quest.type == 'S') {
-    @for (option of quest.options; track $index) {
-    <!-- radio注意要有name作為判斷這些radio是同一群組 -->
-    <!-- value是選了這個選項對應的ngModel中的值 -->
-    <div>
-      <input type="radio" name="{{quest.topic_id}}" value="{{option.code}}" [(ngModel)]="quest.radio_answer">
-      {{ option.optionName }}
-    </div>
-    }
-    }
-
-    @if (quest.type == 'T') {
-    <textarea style="width: 90%; resize: vertical; min-height: 100px; max-height: 500px;"
-      [(ngModel)]="quest.answer"></textarea>
-    }
-    <br>
+      @if (quest.type == 'T') {
+        <textarea style="width: 90%; resize: vertical; min-height: 100px; max-height: 500px;"
+          [(ngModel)]="quest.answer"></textarea>
+      }
+      <br>
     }
   </ol>
 

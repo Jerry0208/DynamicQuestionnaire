@@ -195,7 +195,14 @@ export class AddList2Component {
     if (this.rewrite_mode) {
 
       //將newQues 放入 Table 內
-      let newQues = { quiz_id: this.quiz_id, ques_id: this.ques_id, ques_name: this.ques_name, required: this.required, type: this.type, options: options };
+      let newQues = {
+        quiz_id: this.quiz_id,
+        ques_id: this.ques_id,
+        ques_name: this.ques_name,
+        required: this.required,
+        type: this.type,
+        options: options
+      };
 
       //取代原本的數據
       this.dataSource.data[this.ques_id - 1] = newQues;
@@ -214,7 +221,14 @@ export class AddList2Component {
       this.ques_id += 1;
 
       //將newQues 放入 Table 內
-      let newQues = { quiz_id: this.quiz_id, ques_id: this.ques_id, ques_name: this.ques_name, required: this.required, type: this.type, options: options };
+      let newQues = {
+        quiz_id: this.quiz_id,
+        ques_id: this.ques_id,
+        ques_name: this.ques_name,
+        required: this.required,
+        type: this.type,
+        options: options
+      };
 
       this.dataSource.data = [...this.dataSource.data, newQues];
 
@@ -284,6 +298,10 @@ export class AddList2Component {
 
   //回去編輯問卷基本資訊
   backAddList1() {
+
+    if(this.dataSource.data.length >=1) {
+      this.newQuest.question_list = this.dataSource.data;
+    }
 
     //讓上方 tab 隨著換頁移動
     this.tabLink.switchTab('/control_tab/add_list1')

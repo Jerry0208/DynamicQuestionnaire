@@ -1,7 +1,7 @@
 <br><br>
 <div class="content">
   <div>
-    <h5> 問卷時間: {{quest.start_date}} ~ {{quest.end_date}} </h5>
+    <h6 style="text-align:right;"> 問卷時間: {{quest.start_date}} ~ {{quest.end_date}} </h6>
     <h2 style="text-align: center;"> {{quest.name}} </h2>
     <div style="margin: 5% 0px;">
       <span> {{quest.description}} </span>
@@ -21,38 +21,38 @@
       <label>信箱 : {{quest.user_email}} </label>
     </div><br>
     <div>
-      <label style="margin-left: 20px;">年齡 : {{quest.user_age}}</label>
+      <label style="margin-left: 9px;">年齡 : {{quest.user_age}}</label>
     </div><br>
   </div>
   <div>
     @for (answer of quest.questArray; track $index) {
-    <hr>
-    <h5>{{answer.topic_id}}. {{answer.topic_name}} </h5>
-    <div class="d-flex flex-wrap justify-content-start">
-      @if (answer.type == 'M') {
-      @for (option of answer.options; track $index) {
-      @if (option.box_boolean) {
-      <span>●{{option.optionName}}</span>
+      <hr>
+      <h5>{{answer.ques_id}}. {{answer.ques_name}} </h5>
+      <div class="d-flex flex-wrap justify-content-start">
+        @if (answer.type == 'M') {
+          @for (op of answer.options; track $index) {
+            @if (op.box_boolean) {
+              <span>●{{op.option}}</span>
+            }
+          }
+        }
+      </div>
+      @if (answer.type == "S") {
+        @for (op of answer.options; track $index) {
+          @if(op.option_number == answer.radio_answer){
+            <br>
+            <span> {{op.option}} </span>
+        }
+        }
       }
-      }
-      }
-    </div>
-    @if (answer.type == "S") {
-    @for (answer of answer.options; track $index) {
-    @if(answer.code == answer.radio_answer){
-    <br>
-    <span> {{answer.optionName}} </span>
-    }
-    }
-    }
 
-    <div class="d-flex flex-wrap justify-content-start">
-      @if (answer.type == "T") {
-      <br>
-      <span> {{answer.answer}} </span>
-      }
-      <br>
-    </div>
+      <div class="d-flex flex-wrap justify-content-start">
+        @if (answer.type == "T") {
+          <br>
+            <span> {{answer.answer}} </span>
+        }
+        <br>
+      </div>
     }
   </div>
   <!-- 確認後將資料傳至資料庫 -->

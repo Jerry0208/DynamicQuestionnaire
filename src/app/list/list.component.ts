@@ -228,22 +228,25 @@ export class ListComponent implements AfterViewInit {
 
 
   // 使用者模式: 取得問卷資訊(之後要傳到後台)
-  quesInfo(element: number) {
-    console.log(element);
+  async quesInfo(quiz_data: ListElement) {
+    this.send_quiz_data_to_question_service(quiz_data);
   }
-
   // 管理者模式: 前往問卷回饋畫面
-  to_statistics(element_id: number) {
-
+  to_statistics(quiz_data: ListElement) {
+    this.send_quiz_data_to_question_service(quiz_data);
   }
   // 管理者模式: 將在 list 中的問卷基本資訊帶到 quesTemp 後前往更新畫面
-  to_update(element: ListElement) {
+  to_update(quiz_data: ListElement) {
+    this.send_quiz_data_to_question_service(quiz_data);
+  }
+
+  //將 quiz 資訊送至 question.service
+  send_quiz_data_to_question_service(element: ListElement) {
     this.quesTemp.id = element.id;
     this.quesTemp.name = element.name;
     this.quesTemp.description = element.description;
     this.quesTemp.start_date = element.start_date;
     this.quesTemp.end_date = element.end_date;
-
   }
 
   //按鈕搜尋 By ngMoudle

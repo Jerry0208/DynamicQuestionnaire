@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 // 沒有Id 是因為 SQL 會自動生成
 
 export class New_question implements question_data {
-  id :number = 0;
+  id: number = 0;
   //問卷基本資訊
   //問卷名
   name!: string;
@@ -21,8 +21,7 @@ export class New_question implements question_data {
   // 是否公布(true:公布, false:不公布)
   is_published !: boolean;
   //問卷內容
-  question_list!: QuestArray[];
-
+  question_list: QuestArray[] = [];
 
   reset() {
     this.id = 0;
@@ -39,14 +38,14 @@ export class New_question implements question_data {
 //問卷基本資訊
 interface question_data {
   //問卷id
-  id :number ;
+  id: number;
   //問卷名
   name: string;
   //問卷描述
   description: string;
   //起迄日期
-  start_date: Date | null;
-  end_date: Date | null;
+  start_date: Date;
+  end_date: Date;
   //問卷內容
   question_list: QuestArray[];
 
@@ -71,5 +70,5 @@ interface QuestArray {
 //選項陣列
 interface option {
   option: String;
-  option_number: String;
+  option_number: number;
 }

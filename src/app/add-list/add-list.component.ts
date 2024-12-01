@@ -6,13 +6,14 @@ import { ControlTabComponent } from '../control-tab/control-tab.component';
 import { HttpClient } from '@angular/common/http';// 發送 hyyt api
 import moment from 'moment'; // 比較日期
 
-
+// api 回復格式
 export interface Ques_res {
   code: number;
-  massage: string;
+  message: string;
   ques_list: Ques_list[];
 }
 
+//Ques_list 資料格式
 export interface Ques_list {
   quiz_id: number;
   ques_id: number;
@@ -20,28 +21,6 @@ export interface Ques_list {
   type: string;
   required: boolean;
   options: string;
-}
-
-//問卷內容
-interface QuestArray {
-  //問卷Id
-  quiz_id: number;
-  //問題Id
-  ques_id: number;
-  //問題名
-  ques_name: string;
-  //必填欄位
-  required: boolean;
-  //問題類型
-  type: string;
-  //題目 (短述題為空值)
-  options: option[];
-}
-
-//選項陣列
-interface option {
-  option: String;
-  option_number: String;
 }
 
 
@@ -149,20 +128,29 @@ export class AddListComponent {
       return
     }
 
-    // 如果有 quiz id 就發送 api 至後端取得問卷選項內容
-    let get_ques_req = { quiz_id: this.quesTemp.id }
+     // api 獲得 ques 方法
+
+    // 要回傳的 ques 陣列
+    let question_list : {
+      quiz_id:number,
+      ques_id:number,
+      ques_name:string,
+      required:boolean,
+      type:string,
+      options:{ option : string, option_number : number}[],
+    }[] = [];
+    // get_ques req
+    const get_ques_req = { quiz_id: this.quesTemp.id }
     this.http.post("http://localhost:8080/quiz/get_ques", get_ques_req).subscribe((res: any) => {
-      let ques_res: Ques_res = res;
+      const ques_res: Ques_res = res;
 
       //如果請求失敗就 return
       if (ques_res.code != 200) {
-        alert(ques_res.massage)
         return;
       }
 
-      // 將問題選項放進 quesTemp 中
-      let ques_list: Ques_list[] = ques_res.ques_list
-      let question_list: QuestArray[] = [];
+      // 將問題選項取出並將被字串化的 options 轉為類別資料中
+      const ques_list = ques_res.ques_list
       ques_list.forEach(item => {
         question_list.push({
           quiz_id: item.quiz_id,
@@ -173,10 +161,9 @@ export class AddListComponent {
           options: JSON.parse(item.options)
         })
       })
-      this.quesTemp.question_list = question_list;
     })
-
-
+    // 透過 api 預先將 ques_list 先行放入 question_service 內
+    this.quesTemp.question_list = question_list
 
   }
 
