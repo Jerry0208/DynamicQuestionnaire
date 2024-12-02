@@ -36,10 +36,9 @@ export class CheckAnserComponent {
   }
 
   goLsit() {
-    // 將問題題號跟問題答案做成以下格式
+    // 將 問題題號 跟 問題答案 整理成後端相對應的 key(Integer) : value(List<String>) 的 JSON 格式
     let answer: { [key: number]: Array<string> } = {};
 
-    // let answer: Map<number, Array<string>> = new Map();
     for (let i = 0; i < this.quest.questArray.length; i++) {
 
       let answerStr: Array<string> = [];
@@ -83,15 +82,16 @@ export class CheckAnserComponent {
     }
 
     this.http.post("http://localhost:8080/quiz/fillin", feedback_req).subscribe((res: any) => {
-      if(res.code != 200){
-        return
+      if(res.massage == "Email duplicated!!"){
+        alert("請勿重複填寫相同問卷")
+      }else{
+        alert("感謝您的填寫")
       }
-
-      alert("感謝您的填寫")
     })
 
     this.surveyService.reset();
     this.router.navigateByUrl('/list');
+
   }
 
 }
