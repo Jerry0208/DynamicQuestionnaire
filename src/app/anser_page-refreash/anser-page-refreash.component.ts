@@ -151,6 +151,7 @@ export class AnserPageRefreashComponent {
     }
 
     this.questService.questData = {
+      quiz_id : this.quest.id,
       name: this.quest.name,
       start_date: this.quest.start_date,
       end_date: this.quest.end_date,

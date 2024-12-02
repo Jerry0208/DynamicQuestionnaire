@@ -110,10 +110,12 @@ export class ListComponent implements AfterViewInit {
       this.is_admin = false
       this.displayedColumns = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
     }
+
+    //保持 service 沒有資料
+    this.quesTemp.reset();
+
     //搜尋全部問卷,並把內容呈現在畫面上
-    let search_req = {
-      is_admin: this.is_admin
-    }
+    let search_req = { is_admin: this.is_admin }
     this.search_and_set_quiz_status(search_req);
   }
 

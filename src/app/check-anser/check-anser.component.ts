@@ -2,6 +2,7 @@ import { Component, HostListener } from '@angular/core';//OnDestroy、HostListen
 import { SurveyService } from '../service/survey.service';
 import { Router } from '@angular/router';
 import moment from 'moment';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-check-anser',
@@ -11,7 +12,13 @@ import moment from 'moment';
   styleUrl: './check-anser.component.scss'
 })
 export class CheckAnserComponent {
-  constructor(private surveyService: SurveyService, private router: Router) {}
+  constructor(
+    private surveyService: SurveyService,
+    private router: Router,
+    // http api 請求
+    private http: HttpClient,
+  ) { }
+
   quest: any;
 
   ngOnInit() {
@@ -29,18 +36,60 @@ export class CheckAnserComponent {
   }
 
   goLsit() {
-    alert("感謝您的填寫")
-    const feedback = {
-      quiz_id : this.quest.quiz_id,
-      ques_id : this.quest.ques_id,
-      user_name : this.quest.user_name,
-      phone : this.quest.user_phone,
-      email : this.quest.user_email,
-      age : this.quest.user_age,
-      fillin_date : moment().format('YYYY-MM-DD'),
-      // 答案資料型態 string ，格式未知
-      // answer : ,
+    // 將問題題號跟問題答案做成以下格式
+    let answer: { [key: number]: Array<string> } = {};
+
+    // let answer: Map<number, Array<string>> = new Map();
+    for (let i = 0; i < this.quest.questArray.length; i++) {
+
+      let answerStr: Array<string> = [];
+      // 如果是單選題
+      if (this.quest.questArray[i].type == "S") {
+        // 找出 與 this.quest.questArray[i].radio_answer 相對應的題目
+        this.quest.questArray[i].options.forEach((item: any) => {
+          if (this.quest.questArray[i].radio_answer == item.option_number) {
+            answerStr.push(item.option)
+          }
+        })
+      }
+
+      // 如果是複選題
+      if (this.quest.questArray[i].type == "M") {
+        // 找出 this.quest.questArray[i].options 中box_boolean 為 true 的 選項
+        this.quest.questArray[i].options.forEach((item: any) => {
+          if (item.box_boolean) {
+            answerStr.push(item.option)
+          }
+        })
+      }
+
+      // 如果是短述題
+      if (this.quest.questArray[i].type == "T") {
+        answerStr.push(this.quest.questArray[i].answer)
+      }
+      answer[this.quest.questArray[i].ques_id] = answerStr
     }
+
+
+    // 發給後端的 req
+    const feedback_req = {
+      quiz_id: this.quest.quiz_id,
+      user_name: this.quest.user_name,
+      phone: this.quest.user_phone,
+      email: this.quest.user_email,
+      age: this.quest.user_age,
+      answer: answer,
+      fillin_date: new Date()
+    }
+
+    this.http.post("http://localhost:8080/quiz/fillin", feedback_req).subscribe((res: any) => {
+      if(res.code != 200){
+        return
+      }
+
+      alert("感謝您的填寫")
+    })
+
     this.surveyService.reset();
     this.router.navigateByUrl('/list');
   }
