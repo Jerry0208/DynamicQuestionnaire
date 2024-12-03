@@ -1,19 +1,17 @@
 <header>
   <h1 style="text-align: center;">問卷管理</h1>
-  @if(!links[3].hide){
+  @if(!links[2].hide){
   <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="home" (click)="backList()"></mat-icon>
   }
 </header>
 <main>
-  <!-- 頁籤 1.問卷 2.題目 3.問卷回饋 4.統計 -->
+  <!-- 頁籤 1.問卷 2.題目 3.問卷回饋 -->
   <!-- 找找問卷完成後換頁到題目的方法 、 還有問卷狀態在進行中或是已完結時不能對問卷題目進行操作 -->
   <nav mat-tab-nav-bar [tabPanel]="tabPanel">
     @for (link of links; track link) {
     <a mat-tab-link (click)="switchTab(link.path)" [disabled]='link.hide' [routerLink]="link.path"
       [active]="activeLink == link.path"> {{link.name}} </a>
     }
-    <!-- 隱藏頁面 -->
-    <!-- <a mat-tab-link [disabled]="true">Disabled Link</a> -->
   </nav>
 
   <mat-tab-nav-panel #tabPanel>

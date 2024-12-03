@@ -102,6 +102,10 @@ export class ListComponent implements AfterViewInit {
   paginator!: MatPaginator;
 
   ngOnInit(): void {
+
+    // 清除session storage 中的 quesStatus
+    sessionStorage.removeItem("quesStatus")
+
     //保持當前的使用的模式
     if (sessionStorage.getItem("is_admin") == "true") {
       this.is_admin = true

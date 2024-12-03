@@ -1,7 +1,27 @@
 .contentCss{
-  width: 85%;
+  width: 65%;
   margin: 0 auto;
 }
 .changePage{
   margin-top: -15px;
+}
+
+.button_css{
+  background-color: white; /* Green */
+  border: 2px solid #04AA6D;
+  color: #04AA6D;
+  padding: 10px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  justify-self: end;
+  font-size: 20px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #04AA6D;
+    color: white;
+  }
 }

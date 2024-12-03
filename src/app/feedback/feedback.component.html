@@ -1,29 +1,30 @@
 <br><br>
 <div class="contentCss">
   <!-- 預設排序方式 : 日期由近到遠 -->
+   <button class="button_css" type="button" (click)="to_statistics()">觀看統計</button>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 table table-striped table-hover table-bordered">
 
-    <!-- answerId Column -->
-    <ng-container matColumnDef="answerId">
+    <!-- serial_number Column -->
+    <ng-container matColumnDef="serial_number">
       <th mat-header-cell *matHeaderCellDef>編號</th>
-      <td mat-cell *matCellDef="let element"> {{element.answerId}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.serial_number}} </td>
     </ng-container>
 
-    <!-- answerName Column -->
-    <ng-container matColumnDef="answerName">
+    <!-- user_name Column -->
+    <ng-container matColumnDef="user_name">
       <th mat-header-cell *matHeaderCellDef>姓名</th>
-      <td mat-cell *matCellDef="let element">{{element.answerName}}</td>
+      <td mat-cell *matCellDef="let element">{{element.user_name}}</td>
     </ng-container>
 
-    <!-- answerDateTime Column -->
-    <ng-container matColumnDef="answerDateTime">
+    <!-- fillin_date Column -->
+    <ng-container matColumnDef="fillin_date">
       <th mat-header-cell *matHeaderCellDef>填寫時間</th>
-      <td mat-cell *matCellDef="let element"> {{element.answerDateTime}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.fillin_date}} </td>
     </ng-container>
 
     <!-- 統計 Column -->
     <ng-container matColumnDef="lookAnswer">
-      <th mat-header-cell *matHeaderCellDef>觀看結果</th>
+      <th mat-header-cell *matHeaderCellDef>觀看回顧</th>
       <td mat-cell *matCellDef="let element">
         <a routerLink="/look_answer">
           <mat-icon aria-hidden="false" fontIcon="chevron_right" style="cursor: pointer;"></mat-icon>

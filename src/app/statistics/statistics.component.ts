@@ -89,6 +89,12 @@ export class StatisticsComponent {
   }
 
   goBack() {
+
+    if(sessionStorage.getItem("quesStatus") == "進行中" ||sessionStorage.getItem("quesStatus") == "已結束"){
+      this.router.navigate(['/control_tab/feedback']);
+      return;
+    }
+
     this.router.navigate(['/list']);
   }
 
