@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { New_question } from '../service/new_question.service';
+import { Feedback_dto } from '../service/feedback_dto.service';
 
 @Component({
   selector: 'app-look-anser',
@@ -9,14 +11,47 @@ import { Router } from '@angular/router';
   styleUrl: './look-anser.component.scss'
 })
 export class LookAnserComponent {
-  constructor(private router:Router) {}
-  // S 單選 , M 多選 , T 短述題
-  ansesr = {
-    id:1,
-    user_name:'王曉明',
-    phone:'0933567895',
-    email:'abc123@gmail.com',
-    age:'25',
+  constructor(
+    private router: Router,
+    private quiz_info: New_question,
+    private feedback_dto: Feedback_dto,
+  ) { }
+
+  feedback: any = {}
+
+  ngOnInit(): void {
+
+    if (this.quiz_info.id !== 0) {
+      this.feedback = {
+        id: this.quiz_info.id,
+        name: this.quiz_info.name,
+        description: this.quiz_info.description,
+        user_name: this.feedback_dto.user_name,
+        phone: this.feedback_dto.phone,
+        email: this.feedback_dto.email,
+        age: this.feedback_dto.age,
+        start_date: this.quiz_info.start_date,
+        end_date: this.quiz_info.end_date,
+        answer: this.feedback_dto.answer,
+      }
+      sessionStorage.setItem("feedback", JSON.stringify(this.feedback))
+    } else {
+      let feedbackStr: string = sessionStorage.getItem("feedback")!;
+      this.feedback = JSON.parse(feedbackStr);
+    }
+
+
+  }
+
+
+
+
+  answer = {
+    id: 1,
+    user_name: '王曉明',
+    phone: '0933567895',
+    email: 'abc123@gmail.com',
+    age: '25',
     name: '範例問卷標題',
     start_date: '2024/10/01',
     end_date: '2024/12/25',
@@ -30,7 +65,7 @@ export class LookAnserComponent {
       questName: '您對過去一年公司的整體發展感到滿意嗎？',
       type: 'S',
       radioAnswer: 'A',
-      answer:'',
+      answer: '',
       options: [
         { option: '非常滿意', code: 'A', boxBoolean: false },
         { option: '滿意', code: 'B', boxBoolean: false },
@@ -45,10 +80,10 @@ export class LookAnserComponent {
       questName: '過去一年中，您是否達成了大部分設定的工作目標？',
       type: 'S',
       radioAnswer: 'B',
-      answer:'',
+      answer: '',
       options: [
-        { option: '是', code: 'A' , boxBoolean : false},
-        { option: '否', code: 'B' , boxBoolean : false},
+        { option: '是', code: 'A', boxBoolean: false },
+        { option: '否', code: 'B', boxBoolean: false },
       ]
     },
     {
@@ -57,12 +92,12 @@ export class LookAnserComponent {
       questName: '您認為下列哪些因素對於提升工作效率有幫助？（多選）',
       type: 'M',
       radioAnswer: '',
-      answer:'',
+      answer: '',
       options: [
-        { option: '工作環境改善', code: 'A' , boxBoolean : false},
-        { option: '技術設備升級', code: 'B' , boxBoolean : true},
-        { option: '團隊合作', code: 'C' , boxBoolean : false},
-        { option: '培訓與發展機會', code: 'D' , boxBoolean : true},
+        { option: '工作環境改善', code: 'A', boxBoolean: false },
+        { option: '技術設備升級', code: 'B', boxBoolean: true },
+        { option: '團隊合作', code: 'C', boxBoolean: false },
+        { option: '培訓與發展機會', code: 'D', boxBoolean: true },
       ]
     },
     {
@@ -71,7 +106,7 @@ export class LookAnserComponent {
       questName: '請描述過去一年中您在工作上遇到的主要挑戰：',
       type: 'T',
       radioAnswer: '',
-      answer:'示範回答1',
+      answer: '示範回答1',
       options: []
     },
     {
@@ -80,13 +115,13 @@ export class LookAnserComponent {
       questName: '您對公司未來發展有什麼建議或期望？',
       type: 'T',
       radioAnswer: '',
-      answer:'示範回答2',
+      answer: '示範回答2',
       options: []
     },
     ]
   }
 
-  backPage(){
+  backPage() {
     this.router.navigateByUrl('/control_tab/feedback')
   }
 

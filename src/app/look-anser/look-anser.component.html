@@ -2,54 +2,35 @@
 <br>
 <div class="contentCss">
   <div class="">
-    <h5 class=""> 問卷時間: {{ansesr.start_date}} ~ {{ansesr.end_date}} </h5>
-    <h2 style="text-align: center;"> {{ansesr.name}} </h2>
+    <h5 style="text-align: end;"> 問卷時間: {{feedback.start_date}} ~ {{feedback.end_date}} </h5>
+    <h2 style="text-align: center;"> {{feedback.name}} </h2>
     <div style="margin: 5% 0px;">
-      <span> {{ansesr.description}} </span>
+      <span> {{feedback.description}} </span>
     </div>
   </div>
   <div class="">
     <div>
-      <label>名稱 : {{ansesr.user_name}} </label>
+      <label>名稱 : {{feedback.user_name}} </label>
     </div><br>
     <div>
-      <label>手機 : {{ansesr.phone}}</label>
+      <label>手機 : {{feedback.phone}}</label>
     </div><br>
     <div>
-      <label>信箱 :{{ansesr.email}} </label>
+      <label>信箱 :{{feedback.email}} </label>
     </div><br>
     <div>
-      <label>年齡 : {{ansesr.age}}</label>
+      <label>年齡 : {{feedback.age}}</label>
     </div><br>
   </div>
+  <hr>
   <div class="">
-    @for (answer of ansesr.options; track $index) {
-    <span>{{answer.ques_id}}. {{answer.questName}} </span>
-    @if (answer.type == 'M') {
-    @for (op of answer.options; track $index) {
-    @if (op.boxBoolean) {
-    <br>
-    <span style="margin-left: 25px;">‧ {{op.option}}</span>
-    }
-    }
-    }
-    @if (answer.type == "S") {
-    @for (answerS of answer.options; track $index) {
-    @if(answerS.code == answer.radioAnswer){
-    <br>
-    <span style="margin-left: 25px;">‧ {{answerS.option}} </span>
-    }
-    }
-    }
-    @if (answer.type == "T") {
-    <br>
-    <span style="margin-left: 25px;">‧ {{answer.answer}} </span>
-    }
-    <br>
+    @for (fb of feedback.answer; track $index) {
+      <p> {{fb.ques_id}}.  {{fb.ques_name}} </p>
+      @for (answer of fb.answer; track $index) {
+        <p style="margin-left: 3%;">{{answer}}</p>
+      }
     }
   </div>
-  <!-- 確認後將資料傳至資料庫 -->
-  <!-- <button (click)="submitFinal()">提交最終確認</button> -->
   <br>
   <div class="d-flex justify-content-end">
     <button type="button" (click)="backPage()" class="buttonCss">返回</button>

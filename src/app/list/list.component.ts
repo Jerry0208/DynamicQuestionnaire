@@ -13,6 +13,8 @@ import { DialogContent } from '../dialog/dialog'; // dialog
 import moment from 'moment'; // 比較日期
 import { LoadingService } from '../service/loading.service'; // loading
 import { New_question } from '../service/new_question.service'; // 換頁傳輸問卷檔案的 service
+import { SurveyService } from '../service/survey.service';
+import { Feedback_dto } from '../service/feedback_dto.service';
 
 
 export interface ListElement {
@@ -65,7 +67,9 @@ export class ListComponent implements AfterViewInit {
   constructor(
     private http: HttpClient,
     private loadingService: LoadingService,
-    private quesTemp: New_question
+    private quesTemp: New_question,
+    private surveyService: SurveyService,
+    private feedback_dto : Feedback_dto,
   ) { }
 
   //日期選擇範圍
@@ -103,8 +107,11 @@ export class ListComponent implements AfterViewInit {
 
   ngOnInit(): void {
 
-    // 清除session storage 中的 quesStatus
+    // 清除session storage 中的多餘的資料
     sessionStorage.removeItem("quesStatus")
+    sessionStorage.removeItem("feedback_quiz_id")
+    sessionStorage.removeItem("feedback")
+
 
     //保持當前的使用的模式
     if (sessionStorage.getItem("is_admin") == "true") {
@@ -115,8 +122,10 @@ export class ListComponent implements AfterViewInit {
       this.displayedColumns = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
     }
 
-    //保持 service 沒有資料
+    //保持 service 資料乾淨
     this.quesTemp.reset();
+    this.surveyService.reset();
+    this.feedback_dto.reset();
 
     //搜尋全部問卷,並把內容呈現在畫面上
     let search_req = { is_admin: this.is_admin }

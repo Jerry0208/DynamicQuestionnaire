@@ -1,4 +1,3 @@
-import { user } from './../../../../demo_1/src/app/app.component';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -10,6 +9,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ControlTabComponent } from '../control-tab/control-tab.component';
 import { New_question } from '../service/new_question.service';
 import { HttpClient } from '@angular/common/http';
+import { Feedback_dto } from '../service/feedback_dto.service';
 
 
 export interface Feedback {
@@ -26,14 +26,6 @@ export interface answer {
   ques_id: number;
   ques_name: string;
   answer: Array<string>;
-}
-
-
-
-export interface answerTemp {
-  serial_number: number;
-  user_name: string;
-  fillin_date: string;
 }
 
 @Component({
@@ -58,52 +50,83 @@ export class FeedbackComponent implements AfterViewInit {
     private router: Router,
     private answer: New_question,
     private http: HttpClient,
+    private feedback_dto : Feedback_dto,
   ) { }
 
   ngOnInit(): void {
     // 讓tab標籤亮起來
     this.tabLink.switchTab('/control_tab/feedback')
     this.tabLink.quesStatus(sessionStorage.getItem("quesStatus"))
-    this.http.get("http://localhost:8080/quiz/feedback?quizId=" + this.answer.id).subscribe((res: any) => {
-      console.log(res);
-      let user_data_list: Feedback[] = []
 
+    if(this.answer.id != 0){
+      sessionStorage.setItem("feedback_quiz_id", this.answer.id.toString())
+    }
+
+    this.http.get("http://localhost:8080/quiz/feedback?quizId=" + Number(sessionStorage.getItem("feedback_quiz_id"))).subscribe((res: any) => {
+      let user_data_list: Feedback[] = [] // 空陣列初始化
+      const userMap = new Map<string, number>(); // 使用 Map 儲存 email 和對應索引值
+
+      // 主迴圈處理 feedback
       for (let i = 0; i < res.feedback_dto_list.length; i++) {
+        const feedback = res.feedback_dto_list[i];
 
-        for (let l = 0; l < user_data_list.length; l++) {
-          if (user_data_list[l].email != res.feedback_dto_list[i].emil) {
-            user_data_list.push({
-              serial_number: i,
-              user_name: res.feedback_dto_list[i].user_name,
-              phone: res.feedback_dto_list[i].phone,
-              email: res.feedback_dto_list[i].email,
-              age: res.feedback_dto_list[i].age,
-              fillin_date: res.feedback_dto_list[i].fliin_date,
-              answer : [] // 還沒寫
-            })
-          }
+        // 資料完整性檢查
+        if (!feedback.ques_id || !feedback.ques_name || !feedback.email) {
+          console.warn('Incomplete data:', feedback);
+          continue; // 跳過此筆資料
         }
 
+        // JSON 解析回答內容
+        let parsedAnswer;
+        try {
+          parsedAnswer = JSON.parse(feedback.answer_str);
+        } catch (error) {
+          console.error('Invalid JSON format for answer:', feedback.answer_str);
+          parsedAnswer = feedback.answer_str; // 或設定為預設值
+        }
+
+        // 檢查該 email 是否已存在
+        const userIndex = userMap.get(feedback.email);
+
+        if (userIndex !== undefined) {
+          // 如果已存在該使用者，更新回答
+          user_data_list[userIndex].answer.push({
+            ques_id: feedback.ques_id,
+            ques_name: feedback.ques_name,
+            answer: parsedAnswer,
+          });
+        } else {
+          // 如果是新使用者，新增資料
+          user_data_list.push({
+            serial_number: user_data_list.length + 1, // 按目前陣列長度生成序號
+            user_name: feedback.user_name,
+            phone: feedback.phone,
+            email: feedback.email,
+            age: feedback.age,
+            fillin_date: feedback.fillin_date,
+            answer: [
+              {
+                ques_id: feedback.ques_id,
+                ques_name: feedback.ques_name,
+                answer: parsedAnswer,
+              },
+            ],
+          });
+
+          // 更新 Map 中的 email 索引
+          userMap.set(feedback.email, user_data_list.length - 1);
+        }
       }
 
-
+      console.log(user_data_list);
+      this.dataSource.data = user_data_list
     })
 
   }
 
-
-  //假資料
-  listData: answerTemp[] = [
-    { serial_number: 1, user_name: "aaa", fillin_date: "2024-01-01 10:00", },
-    { serial_number: 2, user_name: "bbb", fillin_date: "2024-04-01 10:00", },
-    { serial_number: 3, user_name: "ccc", fillin_date: "2024-07-01 10:00", },
-    { serial_number: 4, user_name: "ddd", fillin_date: "2024-01-01 10:00", },
-    { serial_number: 5, user_name: "eee", fillin_date: "2024-04-01 10:00", },
-  ];
-
   //table名、table資料來源
   displayedColumns: string[] = ['serial_number', 'user_name', 'fillin_date', 'lookAnswer'];
-  dataSource = new MatTableDataSource<answerTemp>(this.listData);
+  dataSource = new MatTableDataSource<Feedback>();
 
 
   //顯示頁數
@@ -120,9 +143,12 @@ export class FeedbackComponent implements AfterViewInit {
     this.dataSource.paginator._intl.lastPageLabel = "最後一頁"
   }
 
-  //取得問卷資訊(之後要傳到後台)
-  quesInfo(element: Element) {
-    console.log(element);
+  to_look_answer(element : Feedback) {
+    this.feedback_dto.user_name = element.user_name;
+    this.feedback_dto.phone = element.phone;
+    this.feedback_dto.email = element.email;
+    this.feedback_dto.age = element.age;
+    this.feedback_dto.answer = element.answer;
   }
 
   to_statistics() {
