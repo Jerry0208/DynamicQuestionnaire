@@ -23,6 +23,9 @@ export class CheckAnserComponent {
 
   ngOnInit() {
     this.quest = this.surveyService.questData; // 獲取回答
+    if(!this.quest){
+      this.router.navigateByUrl("/list")
+    }
   }
 
   // 重新再入確認鍵
@@ -67,6 +70,7 @@ export class CheckAnserComponent {
         answerStr.push(this.quest.questArray[i].answer)
       }
       answer[this.quest.questArray[i].ques_id] = answerStr
+
     }
 
 
@@ -81,6 +85,8 @@ export class CheckAnserComponent {
       fillin_date: new Date()
     }
 
+
+
     this.http.post("http://localhost:8080/quiz/fillin", feedback_req).subscribe((res: any) => {
       if(res.massage == "Email duplicated!!"){
         alert("請勿重複填寫相同問卷")
@@ -89,8 +95,8 @@ export class CheckAnserComponent {
       }
     })
 
-    this.surveyService.reset();
-    this.router.navigateByUrl('/list');
+    // this.surveyService.reset();
+    // this.router.navigateByUrl('/list');
 
   }
 

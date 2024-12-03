@@ -109,8 +109,8 @@ export class ListComponent implements AfterViewInit {
 
     // 清除session storage 中的多餘的資料
     sessionStorage.removeItem("quesStatus")
-    sessionStorage.removeItem("feedback_quiz_id")
     sessionStorage.removeItem("feedback")
+    sessionStorage.removeItem("quiz_basic_info")
 
 
     //保持當前的使用的模式
@@ -242,27 +242,20 @@ export class ListComponent implements AfterViewInit {
   }
 
 
-  // 使用者模式: 取得問卷資訊(之後要傳到後台)
-  async quesInfo(quiz_data: ListElement) {
-    this.send_quiz_data_to_question_service(quiz_data);
-  }
-  // 管理者模式: 前往問卷回饋畫面
-  to_statistics(quiz_data: ListElement) {
-    this.send_quiz_data_to_question_service(quiz_data);
-  }
-  // 管理者模式: 將在 list 中的問卷基本資訊帶到 quesTemp 後前往更新畫面
-  to_update(quiz_data: ListElement) {
-    this.send_quiz_data_to_question_service(quiz_data);
+  // 獲得問卷資訊(除了選項內容)
+  Record_quiz_information(quiz_data: ListElement) {
+    this.quesTemp.id = quiz_data.id;
+    this.quesTemp.name = quiz_data.name;
+    this.quesTemp.description = quiz_data.description;
+    this.quesTemp.start_date = quiz_data.start_date;
+    this.quesTemp.end_date = quiz_data.end_date;
+
+    //管理者模式:取得問卷狀態，依狀態讓問卷可更新或是可觀看回饋
+    if(this.is_admin){
+      sessionStorage.setItem("quesStatus", quiz_data.status)
+    }
   }
 
-  //將 quiz 資訊送至 question.service
-  send_quiz_data_to_question_service(element: ListElement) {
-    this.quesTemp.id = element.id;
-    this.quesTemp.name = element.name;
-    this.quesTemp.description = element.description;
-    this.quesTemp.start_date = element.start_date;
-    this.quesTemp.end_date = element.end_date;
-  }
 
   //按鈕搜尋 By ngMoudle
   seachNameButton() {
@@ -276,10 +269,6 @@ export class ListComponent implements AfterViewInit {
     this.search_and_set_quiz_status(search_req);
   }
 
-  status(element: any) {
-    //取得問卷狀態，依狀態讓問卷可編輯或是不可編輯
-    sessionStorage.setItem("quesStatus", element)
-  }
   addQues() {
     sessionStorage.setItem("quesStatus", "new")
   }

@@ -44,7 +44,7 @@ export class AnserPageRefreashComponent {
   constructor(
     // 當問卷回答完後要將以獲得的資料傳入 service 中，之後在預覽畫面中呈現
     private questService: SurveyService,
-    //Router
+    // Router
     private router: Router,
     // 問卷格式
     private quiz: New_question,
@@ -56,6 +56,10 @@ export class AnserPageRefreashComponent {
 
     // 先將基本資料 quiz 放入其中
     this.quest = this.quiz
+
+    if(this.quiz.id === 0){
+      this.router.navigateByUrl("/list")
+    }
 
     // 如果有已填寫資料就將資料帶入 (從確認回答的預覽畫面回來時)
     if (this.questService.questData) {
@@ -91,10 +95,8 @@ export class AnserPageRefreashComponent {
         this.makeQuestArray();
       })
     } catch (error) {
-      throwError
+      console.error("問卷取得失敗")
     }
-
-
   }
 
   // 重新再入確認鍵
@@ -151,7 +153,7 @@ export class AnserPageRefreashComponent {
     }
 
     this.questService.questData = {
-      quiz_id : this.quest.id,
+      quiz_id: this.quest.id,
       name: this.quest.name,
       start_date: this.quest.start_date,
       end_date: this.quest.end_date,

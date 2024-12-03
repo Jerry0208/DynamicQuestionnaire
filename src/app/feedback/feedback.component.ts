@@ -50,7 +50,7 @@ export class FeedbackComponent implements AfterViewInit {
     private router: Router,
     private answer: New_question,
     private http: HttpClient,
-    private feedback_dto : Feedback_dto,
+    private feedback_dto: Feedback_dto,
   ) { }
 
   ngOnInit(): void {
@@ -58,11 +58,28 @@ export class FeedbackComponent implements AfterViewInit {
     this.tabLink.switchTab('/control_tab/feedback')
     this.tabLink.quesStatus(sessionStorage.getItem("quesStatus"))
 
-    if(this.answer.id != 0){
-      sessionStorage.setItem("feedback_quiz_id", this.answer.id.toString())
+    // 保存確保網頁不會因為重新整理而變空白
+    let quiz_basic_info = {
+      id: this.answer.id,
+      name: this.answer.name,
+      description: this.answer.description,
+      start_date: this.answer.start_date,
+      end_date: this.answer.end_date
     }
 
-    this.http.get("http://localhost:8080/quiz/feedback?quizId=" + Number(sessionStorage.getItem("feedback_quiz_id"))).subscribe((res: any) => {
+    if (this.answer.id !== 0) {
+      sessionStorage.setItem("quiz_basic_info", JSON.stringify(quiz_basic_info));
+    } else {
+      quiz_basic_info = JSON.parse(sessionStorage.getItem("quiz_basic_info")!);
+      this.answer.id = quiz_basic_info.id;
+      this.answer.name = quiz_basic_info.name;
+      this.answer.description = quiz_basic_info.description;
+      this.answer.start_date = quiz_basic_info.start_date;
+      this.answer.end_date = quiz_basic_info.end_date;
+    }
+
+    // 取得 feedback 資料後加工成可以在 table 內呈現的樣子
+    this.http.get("http://localhost:8080/quiz/feedback?quizId=" + quiz_basic_info.id).subscribe((res: any) => {
       let user_data_list: Feedback[] = [] // 空陣列初始化
       const userMap = new Map<string, number>(); // 使用 Map 儲存 email 和對應索引值
 
@@ -118,7 +135,6 @@ export class FeedbackComponent implements AfterViewInit {
         }
       }
 
-      console.log(user_data_list);
       this.dataSource.data = user_data_list
     })
 
@@ -143,7 +159,7 @@ export class FeedbackComponent implements AfterViewInit {
     this.dataSource.paginator._intl.lastPageLabel = "最後一頁"
   }
 
-  to_look_answer(element : Feedback) {
+  to_look_answer(element: Feedback) {
     this.feedback_dto.user_name = element.user_name;
     this.feedback_dto.phone = element.phone;
     this.feedback_dto.email = element.email;

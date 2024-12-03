@@ -24,15 +24,14 @@ export const routes: Routes = [
   {
     path: 'control_tab', component: ControlTabComponent,
     children: [
-      { path: 'statistics', component: StatisticsComponent },
       { path: 'add_list1', component: AddListComponent },
       { path: 'add_list2', component: AddList2Component },
       { path: 'feedback', component: FeedbackComponent }
     ]
   },
   { path: 'statistics', component: StatisticsComponent },
-  {path:'new_anwser_page' , component:AnserPageRefreashComponent},
-  {path:'check_question', component:CheckQuestionComponent},
-  {path:'look_answer', component:LookAnserComponent}
+  { path: 'new_anwser_page', component: AnserPageRefreashComponent },
+  { path: 'check_question', component: CheckQuestionComponent },
+  { path: 'look_answer', component: LookAnserComponent }
 
 ];

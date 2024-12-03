@@ -18,18 +18,8 @@ export class StatisticsComponent {
 
   quesStatus = sessionStorage.getItem("quesStatus")
 
-  ngOnInit(): void {
-    if (this.router.url != "/statistics") {
-      this.showBackButton = false
-    }
-  }
+  ngOnInit(): void { }
 
-  ques_status_check(quesStatus: any) {
-    if (quesStatus == "進行中"
-      || quesStatus == "已結束") {
-      this.showBackButton = false;
-    }
-  }
 
 
   // S 單選 , M 多選 , T 短述題
@@ -90,7 +80,7 @@ export class StatisticsComponent {
 
   goBack() {
 
-    if(sessionStorage.getItem("quesStatus") == "進行中" ||sessionStorage.getItem("quesStatus") == "已結束"){
+    if(this.quesStatus == "進行中" ||this.quesStatus == "已結束"){
       this.router.navigate(['/control_tab/feedback']);
       return;
     }

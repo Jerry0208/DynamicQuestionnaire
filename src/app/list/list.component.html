@@ -104,14 +104,14 @@
         @if (is_admin) {
           @if(element.status == "進行中" || element.status == "已結束"){
             <a routerLink="/control_tab/feedback" routerLinkActive="active"
-              (click)="status(element.status); to_statistics(element)" title="查看回饋統計">{{element.name}}</a>
+              (click)="Record_quiz_information(element)" title="查看回饋統計">{{element.name}}</a>
           }@else {
             <a routerLink="/control_tab/add_list1" routerLinkActive="active"
-              (click)="status(element.status); to_update(element)" title="問卷更新">{{element.name}}</a>
+              (click)="Record_quiz_information(element)" title="問卷更新">{{element.name}}</a>
           }
         }@else{
           @if (element.status == "進行中") {<a routerLink="/new_anwser_page" routerLinkActive="active"
-                [title]="element.description" (click)="quesInfo(element)"> {{element.name}} </a> }
+                [title]="element.description" (click)="Record_quiz_information(element)"> {{element.name}} </a> }
           @else { {{element.name}} }
         }
       </td>
