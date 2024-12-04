@@ -243,7 +243,7 @@ export class ListComponent implements AfterViewInit {
 
 
   // 獲得問卷資訊(除了選項內容)
-  Record_quiz_information(quiz_data: ListElement) {
+  record_quiz_information(quiz_data: ListElement) {
     this.quesTemp.id = quiz_data.id;
     this.quesTemp.name = quiz_data.name;
     this.quesTemp.description = quiz_data.description;

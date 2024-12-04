@@ -95,8 +95,8 @@ export class CheckAnserComponent {
       }
     })
 
-    // this.surveyService.reset();
-    // this.router.navigateByUrl('/list');
+    this.surveyService.reset();
+    this.router.navigateByUrl('/list');
 
   }
 
