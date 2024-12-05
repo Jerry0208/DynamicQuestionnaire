@@ -1,7 +1,6 @@
 import { Component, HostListener } from '@angular/core';//OnDestroy、HostListener監測是否網站是否重新整理
 import { SurveyService } from '../service/survey.service';
 import { Router } from '@angular/router';
-import moment from 'moment';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -23,6 +22,7 @@ export class CheckAnserComponent {
 
   ngOnInit() {
     this.quest = this.surveyService.questData; // 獲取回答
+
     if(!this.quest){
       this.router.navigateByUrl("/list")
     }
@@ -73,7 +73,6 @@ export class CheckAnserComponent {
 
     }
 
-
     // 發給後端的 req
     const feedback_req = {
       quiz_id: this.quest.quiz_id,
@@ -85,11 +84,10 @@ export class CheckAnserComponent {
       fillin_date: new Date()
     }
 
-
-
     this.http.post("http://localhost:8080/quiz/fillin", feedback_req).subscribe((res: any) => {
       if(res.massage == "Email duplicated!!"){
         alert("請勿重複填寫相同問卷")
+        return;
       }else{
         alert("感謝您的填寫")
       }

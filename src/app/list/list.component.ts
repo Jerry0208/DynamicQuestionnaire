@@ -243,7 +243,7 @@ export class ListComponent implements AfterViewInit {
 
 
   // 獲得問卷資訊(除了選項內容)
-  record_quiz_information(quiz_data: ListElement) {
+  record_quiz_information(quiz_data: ListElement, look_statis: boolean) {
     this.quesTemp.id = quiz_data.id;
     this.quesTemp.name = quiz_data.name;
     this.quesTemp.description = quiz_data.description;
@@ -251,7 +251,7 @@ export class ListComponent implements AfterViewInit {
     this.quesTemp.end_date = quiz_data.end_date;
 
     //管理者模式:取得問卷狀態，依狀態讓問卷可更新或是可觀看回饋
-    if(this.is_admin){
+    if(this.is_admin && !look_statis){
       sessionStorage.setItem("quesStatus", quiz_data.status)
     }
   }

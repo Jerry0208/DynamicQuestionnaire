@@ -104,14 +104,14 @@
         @if (is_admin) {
           @if(element.status == "進行中" || element.status == "已結束"){
             <a routerLink="/control_tab/feedback" routerLinkActive="active"
-              (click)="record_quiz_information(element)" title="查看回饋統計">{{element.name}}</a>
+              (click)="record_quiz_information(element, false)" title="查看回饋統計">{{element.name}}</a>
           }@else {
             <a routerLink="/control_tab/add_list1" routerLinkActive="active"
-              (click)="record_quiz_information(element)" title="問卷更新">{{element.name}}</a>
+              (click)="record_quiz_information(element, false)" title="問卷更新">{{element.name}}</a>
           }
         }@else{
           @if (element.status == "進行中") {<a routerLink="/new_anwser_page" routerLinkActive="active"
-                [title]="element.description" (click)="record_quiz_information(element)"> {{element.name}} </a> }
+                [title]="element.description" (click)="record_quiz_information(element, false)"> {{element.name}} </a> }
           @else { {{element.name}} }
         }
       </td>
@@ -140,7 +140,7 @@
       <th mat-header-cell *matHeaderCellDef>結果統計</th>
       <td mat-cell *matCellDef="let element">
         @if ( element.status == '進行中' || element.status == '已結束')
-        { <a routerLink="/statistics" (click)="record_quiz_information(element)">
+        { <a routerLink="/statistics" (click)="record_quiz_information(element, true)">
           <mat-icon aria-hidden="false" fontIcon="chevron_right" style="cursor: pointer;"></mat-icon>
         </a> }
         @else { 敬請期待 } </td>

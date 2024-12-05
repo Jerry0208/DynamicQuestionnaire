@@ -22,6 +22,7 @@ export class CheckQuestionComponent {
 
   ngOnInit(): void {
     this.quiz = this.questions_service;
+
   }
 
 

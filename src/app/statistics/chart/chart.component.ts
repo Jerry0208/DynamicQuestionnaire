@@ -25,8 +25,8 @@ export class ChartComponent {
 
   createPie() {
     // 獲取 canvas 元素
-    // 使用題目ID當作canvas的ID來分類
-    // 否則ID重複程式會失敗
+    // 使用題目ID當作 canvas 的 ID 來分類
+    // 否則 ID 重複程式會失敗
     let ctx = document.getElementById(this.dataId) as HTMLCanvasElement;
 
     // 設定數據
@@ -39,7 +39,7 @@ export class ChartComponent {
           data: this.questData.data,
           // 線與邊框顏色
           backgroundColor: this.questData.color,
-          //設定hover時的偏移量，滑鼠移上去表會偏移，方便觀看選種的項目
+          // 設定 hover 時的偏移量，滑鼠移上去時偏移，方便觀看選中的項目
           hoverOffset: 4,
         },
       ],
@@ -48,10 +48,31 @@ export class ChartComponent {
     if (ctx) {
       // 創建圖表
       let chart = new Chart(ctx, {
-        //pie是圓餅圖,doughnut是環狀圖
-        type: 'pie',
+        // pie 是圓餅圖, doughnut 是環狀圖
+        type: 'doughnut',
         data: data,
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem: any) => {
+                  // 獲取目前數據
+                  const dataset = tooltipItem.dataset.data;
+                  const currentValue = dataset[tooltipItem.dataIndex];
+                  const total = dataset.reduce((acc: number, value: number) => acc + value, 0);
+                  const percentage = ((currentValue / total) * 100).toFixed(2);
+                  return `${tooltipItem.label}: ${percentage}%`;
+                },
+              },
+            },
+          },
+        },
       });
     }
   }
+
+
+
+
+
 }

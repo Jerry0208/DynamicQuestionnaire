@@ -8,7 +8,6 @@ import { DialogContent } from '../dialog/dialog'; // dialog ts
 import { MatButtonModule } from '@angular/material/button';// dialog 中的 mat button
 import { New_question } from '../service/new_question.service';
 import { HttpClient } from '@angular/common/http';
-import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-anser-page-refreash',

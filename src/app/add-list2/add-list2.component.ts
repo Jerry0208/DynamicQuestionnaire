@@ -314,6 +314,10 @@ export class AddList2Component {
       alert('請填寫問卷內容')
       return
     }
+    if(this.rewrite_mode){
+      alert('再編輯模式中')
+      return;
+    }
 
     this.newQuest.question_list = this.dataSource.data;
     this.router.navigateByUrl('/check_question')

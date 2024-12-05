@@ -105,6 +105,7 @@ export class StatisticsComponent {
     })
 
 
+
   }
 
   generateColors(count: number): string[] {

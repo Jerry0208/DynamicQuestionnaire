@@ -3,7 +3,9 @@
 <!-- 把問卷基本資訊放上來 -->
 <div class="contentCss">
   <br>
+  <span style="position: absolute; right: 3%;"> {{questData.start_date}} -  {{questData.end_date}}</span>
   <button mat-stroked-button style="color: #000;margin-left: 15px" (click)="goBack()">返回上一頁</button>
+  <h1 style="text-align: center;" [title]="questData.description">{{questData.name}}</h1>
   @for (quest of questData.quest; track $index) {
   <app-chart class="chartCss" [dataId]="quest.id" [questData]="quest"></app-chart><br><hr>
   }
