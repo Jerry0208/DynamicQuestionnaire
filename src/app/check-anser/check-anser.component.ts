@@ -85,7 +85,7 @@ export class CheckAnserComponent {
     }
 
     this.http.post("http://localhost:8080/quiz/fillin", feedback_req).subscribe((res: any) => {
-      if(res.massage == "Email duplicated!!"){
+      if(res.message == "Email duplicated!!"){
         alert("請勿重複填寫相同問卷")
         return;
       }else{

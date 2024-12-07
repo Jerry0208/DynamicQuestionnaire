@@ -1,3 +1,4 @@
+<div style="text-align: center;"><h3>{{questData.id}}： {{questData.name}}</h3></div>
 <div class="divCss">
   <!-- 判斷不是文字題就不顯示圖表 -->
   @if (questData.type != 'T') {
@@ -6,20 +7,25 @@
       </div>
   }
   <h3 class="textCss">
-      題目： {{questData.name}}
       <!-- 判斷不是文字題就顯示選項跟數量 -->
       <!-- 判斷是文字提就顯示文字 -->
       @if (questData.type != 'T') {
           @for (label of questData.labels; track $index) {
-              <h5 style="padding-left: 15px;padding-top: 10px;">
+              <div style="padding-left: 25px;padding-top: 10px;">
                   選項： {{ questData.labels[$index] }}
                   <span style="float: right;">{{ questData.data[$index] }}</span>
-              </h5>
-          }
-      } @else {
-          @for (data of questData.data; track $index) {
-              <h5 class="typeTCss">{{data}}</h5>
-          }
+              </div>
+            }
+      }
+      @if(questData.text_answer.length >= 1){
+        <div class="text_answer">
+          @for (item of questData.text_answer; track $index) {
+            <ul>
+              <li><div class="typeTCss">{{item}}</div></li>
+            </ul>
+
+        }
+      </div>
       }
   </h3>
 </div>

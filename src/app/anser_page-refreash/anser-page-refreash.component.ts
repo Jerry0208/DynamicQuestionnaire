@@ -128,8 +128,8 @@ export class AnserPageRefreashComponent {
     const dialogRef = this.dialog.open(DialogContent, {
       data: '你確定要離開嗎?',
       //設定長、寬
-      height: "20%",
-      width: "20%",
+      height: "25%",
+      width: "25%",
     });
 
     //在Dialog關閉時接到的回傳內容

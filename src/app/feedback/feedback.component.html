@@ -26,8 +26,8 @@
     <ng-container matColumnDef="lookAnswer">
       <th mat-header-cell *matHeaderCellDef>觀看回顧</th>
       <td mat-cell *matCellDef="let element">
-        <a routerLink="/look_answer">
-          <mat-icon aria-hidden="false" fontIcon="chevron_right" style="cursor: pointer;" (click)="to_look_answer(element)"></mat-icon>
+        <a routerLink="/look_answer" class="link">
+          <mat-icon aria-hidden="false" fontIcon="chevron_right"  (click)="to_look_answer(element)"></mat-icon>
         </a>
     </ng-container>
 

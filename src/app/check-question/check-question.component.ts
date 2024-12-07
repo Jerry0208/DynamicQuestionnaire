@@ -67,7 +67,7 @@ export class CheckQuestionComponent {
     this.http.postApi(create_or_update, create_update_req).subscribe(
       (res: any) => {
         if (res.code != 200) {
-          alert("新增或更新失敗: " + res.massage);
+          alert("新增或更新失敗: " + res.message);
           return;
         }
 

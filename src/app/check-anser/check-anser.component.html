@@ -1,7 +1,7 @@
 <br><br>
 <div class="content">
   <div>
-    <h6 style="text-align:right;"> 問卷時間: {{quest.start_date}} ~ {{quest.end_date}} </h6>
+    <h5 style="text-align:right;"> 問卷時間: {{quest.start_date}} ~ {{quest.end_date}} </h5>
     <h2 style="text-align: center;"> {{quest.name}} </h2>
     <div style="margin: 5% 0px;">
       <span> {{quest.description}} </span>
@@ -21,13 +21,13 @@
       <label>信箱 : {{quest.user_email}} </label>
     </div><br>
     <div>
-      <label style="margin-left: 9px;">年齡 : {{quest.user_age}}</label>
+      <label style="margin-left: 10px;">年齡 : {{quest.user_age}}</label>
     </div><br>
   </div>
   <div>
     @for (answer of quest.questArray; track $index) {
       <hr>
-      <h5>{{answer.ques_id}}. {{answer.ques_name}} </h5>
+      <span>{{answer.ques_id}}. {{answer.ques_name}} </span>
       <div class="d-flex flex-wrap justify-content-start">
         @if (answer.type == 'M') {
           @for (op of answer.options; track $index) {

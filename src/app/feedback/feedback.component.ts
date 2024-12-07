@@ -80,7 +80,6 @@ export class FeedbackComponent implements AfterViewInit {
 
     // 取得 feedback 資料後加工成可以在 table 內呈現的樣子
     this.http.get("http://localhost:8080/quiz/feedback?quizId=" + quiz_basic_info.id).subscribe((res: any) => {
-      console.log(res);
 
       let user_data_list: Feedback[] = [] // 空陣列初始化
       const userMap = new Map<string, number>(); // 使用 Map 儲存 email 和對應索引值

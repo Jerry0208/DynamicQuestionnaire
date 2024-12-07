@@ -28,7 +28,7 @@ export interface ListElement {
 
 export interface search_res {
   code: number;
-  massage: string;
+  message: string;
   quiz_list: quiz_list[];
 }
 
@@ -135,26 +135,29 @@ export class ListComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     //顯示頁數、將預設顯示的英文更改成中文
     this.dataSource.paginator = this.paginator;
-    this.dataSource.paginator._intl.itemsPerPageLabel = "顯示筆數:"
-    this.dataSource.paginator._intl.firstPageLabel = "第一頁:"
-    this.dataSource.paginator._intl.previousPageLabel = "上一頁"
-    this.dataSource.paginator._intl.nextPageLabel = "下一頁"
-    this.dataSource.paginator._intl.lastPageLabel = "最後一頁"
+    this.dataSource.paginator._intl.itemsPerPageLabel = "顯示筆數:";
+    this.dataSource.paginator._intl.firstPageLabel = "第一頁:";
+    this.dataSource.paginator._intl.previousPageLabel = "上一頁";
+    this.dataSource.paginator._intl.nextPageLabel = "下一頁";
+    this.dataSource.paginator._intl.lastPageLabel = "最後一頁";
   }
 
   to_admin() {
-    this.is_admin = true
+    this.is_admin = true;
     this.displayedColumns = ['select', 'id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
-    sessionStorage.setItem("is_admin", "true")
-    let search_req = { is_admin: this.is_admin }
+    sessionStorage.setItem("is_admin", "true");
+    let search_req = { is_admin: this.is_admin };
+    this.seach_status_active_list = ['','','',''];
+    this.statu = '';
     this.search_and_set_quiz_status(search_req);
-
   }
   normal() {
-    this.is_admin = false
+    this.is_admin = false;
     this.displayedColumns = ['id', 'name', 'status', 'start_date', 'end_date', 'statistics'];
-    sessionStorage.setItem("is_admin", "false")
-    let search_req = { is_admin: this.is_admin }
+    sessionStorage.setItem("is_admin", "false");
+    let search_req = { is_admin: this.is_admin };
+    this.seach_status_active_list = ['','','',''];
+    this.statu = '';
     this.search_and_set_quiz_status(search_req);
   }
 
@@ -162,10 +165,10 @@ export class ListComponent implements AfterViewInit {
   deleteSelectedRows() {
     // 開起 dialog，open 裡面的 dialog 的 class 名稱跟要傳過去的內容
     const dialogRef = this.dialog.open(DialogContent, {
-      data: '確定要刪除已選擇的問卷?',
+      data: '確定刪除問卷?',
       //設定長、寬
-      height: "20%",
-      width: "20%",
+      height: "25%",
+      width: "25%",
     });
 
     // 將 quiz id 取出
@@ -237,6 +240,7 @@ export class ListComponent implements AfterViewInit {
         })
       });
       this.dataSource.data = quizlist;
+
       this.loadingService.hide();
     })
   }
@@ -256,6 +260,13 @@ export class ListComponent implements AfterViewInit {
     }
   }
 
+  clear_seach_area(){
+    this.seachName = ''
+    this.startDate = new Date("1900-01-01")
+    this.endDate = new Date("2999-12-31")
+    this.statu = ''
+    this.seach_status_active_list = ['','','','']
+  }
 
   //按鈕搜尋 By ngMoudle
   seachNameButton() {
@@ -266,6 +277,7 @@ export class ListComponent implements AfterViewInit {
       status: this.statu,
       is_admin: this.is_admin,
     }
+
     this.search_and_set_quiz_status(search_req);
   }
 

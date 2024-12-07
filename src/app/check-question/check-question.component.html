@@ -2,7 +2,7 @@
  <br><br>
 <div class="content">
   <div>
-    <h5 class="" style="text-align: end;"> 問卷時間: {{quiz.start_date}} ~ {{quiz.end_date}} </h5>
+    <span class="quiz_date"> 問卷時間: {{quiz.start_date}} ~ {{quiz.end_date}} </span>
     <h2 style="text-align: center;"> {{quiz.name}} </h2>
     <div style="margin: 5% 0px;">
       <span> {{quiz.description}} </span>
@@ -25,21 +25,21 @@
     <label>信箱 : </label>
     <input style="width: 50%;" placeholder="請輸入信箱">
   </div><br>
-  <div style="margin-left: 9px;">
+  <div style="margin-left: 10px;">
     <label>年齡 : </label>
-    <input style="width: 50%;" placeholder="請輸入年齡">
+    <input style="width: 51%;" type="number" placeholder="請輸入年齡">
   </div><br>
 
   <!-- 問題內容 -->
   <ol>
     @for(quest of quiz.question_list; track $index){
       <li>
-        <h5>
+        <div>
           <span>{{ quest.ques_name }}</span>
           @if (quest.required) {
           <span style="color: red;">*</span>
           }
-        </h5>
+        </div>
       </li>
       <!-- 多選: M 單選: S 文字輸入: T -->
       @if (quest.type == "M") {
@@ -47,7 +47,7 @@
         <div>
           <input type="checkbox">
           <span>{{item.option}}</span>
-        </div><br>
+        </div>
       }
       }
       @if (quest.type == 'S') {
@@ -56,12 +56,12 @@
           <div>
             <input type="radio" name="{{quest.ques_name}}">
             <span>{{item.option}}</span>
-          </div><br>
+          </div>
         }
       }
 
       @if (quest.type == 'T') {
-        <textarea style="width: 90%; resize: vertical; min-height: 100px; max-height: 500px;"></textarea>
+        <textarea style="width: 96.5%; resize: none; min-height: 150px;"></textarea>
       }
     }
   </ol>
@@ -73,5 +73,5 @@
     <button (click)=" save_data(true)" style="margin-right: 25px;">存檔並公布</button>
     <!-- 存檔並公布鍵(返回list) -->
     <button (click)="save_data(false)">僅存檔</button>
-  </div><br>
+  </div>
 </div>

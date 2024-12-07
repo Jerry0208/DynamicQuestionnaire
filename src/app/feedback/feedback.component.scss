@@ -1,13 +1,15 @@
-.contentCss{
-  width: 65%;
+.contentCss {
+  width: 75%;
   margin: 0 auto;
 }
-.changePage{
+
+.changePage {
   margin-top: -15px;
 }
 
-.button_css{
-  background-color: white; /* Green */
+.button_css {
+  background-color: white;
+  /* Green */
   border: 2px solid #04AA6D;
   color: #04AA6D;
   padding: 10px 32px;
@@ -23,5 +25,48 @@
   &:hover {
     background-color: #04AA6D;
     color: white;
+  }
+}
+
+.mat-table.td,
+tr {
+  font-size: 24px;
+}
+
+.mat-column-serial_number {
+  width: 5%;
+}
+
+::ng-deep .mat-mdc-paginator-container {
+  font-size: 15px;
+}
+
+.mat-column-user_name {
+  width: 25%;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+.mat-column-fillin_date {
+  width: 15%;
+}
+
+.mat-column-lookAnswer {
+  width: 5.5%;
+  position: relative;
+
+  .mat-icon {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    transition: 0.5s;
+    position: absolute;
+    right: 45%;
+
+    &:hover {
+      position: absolute;
+      right: 35%;
+    }
   }
 }

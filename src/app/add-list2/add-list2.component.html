@@ -7,8 +7,8 @@
       <!-- 選擇題目類型 : 單選、多選、短述題 (確認問題內容是否有確實填寫) -->
       <input type="text" [(ngModel)]='ques_name' style="width: 350px; margin-left: 3px;">
     </div>
-    <mat-form-field>
-      <mat-label>題型</mat-label>
+    <label style="margin-left: 20px;">題型 :</label>
+    <mat-form-field >
       <mat-select matNativeControl [(ngModel)]='type' (ngModelChange)="resetQuest()">
         <!-- value如果是空值 ngModel 會吃空值  -->
         <mat-option value="S">單選</mat-option>
@@ -17,8 +17,8 @@
       </mat-select>
     </mat-form-field>
     <!-- 是否為必選題 -->
-    <label for="input" class="needCss">必選<input type="checkbox" value="need" style="margin-left: 3px;"
-        [(ngModel)]="required"></label>
+    <label for="input" class="needCss">必選 : <input type="checkbox" value="need" style="margin-left: 3px;height: 18px
+    ;width: 18px;"[(ngModel)]="required"></label>
     @if(rewrite_mode){
     <span class="rewrite" style="margin-left: 10%;">再編輯中</span>
     }
@@ -52,8 +52,7 @@
     </div>
     <!-- 問卷預覽 : 問卷題目、問卷類型、題目數量、再編輯題目功能、刪除題目(+確認畫面) -->
     @if(!rewrite_mode){
-    <mat-icon aria-hidden="delete" fontIcon="delete" style="cursor: pointer; font-size: 27px;margin-left: 22.5px;"
-      (click)="deleteSelectedRows()"></mat-icon>
+    <mat-icon aria-hidden="delete" fontIcon="delete" (click)="deleteSelectedRows()"></mat-icon>
     }
   </div>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -99,8 +98,8 @@
 
     <!-- rewrite Column-->
     <ng-container matColumnDef="rewrite">
-      <th mat-header-cell *matHeaderCellDef> 編輯 </th>
-      <td mat-cell *matCellDef="let element"> <input type="button" value="再編輯" [disabled]='rewrite_mode'
+      <th mat-header-cell *matHeaderCellDef> 再編輯 </th>
+      <td mat-cell *matCellDef="let element"> <input type="button" value="編輯" [disabled]='rewrite_mode'
           (click)="rewrite(element)"> </td>
     </ng-container>
 

@@ -7,7 +7,7 @@ import { New_question } from '../service/new_question.service';
 
 export interface Statistics_res {
   code: number;
-  massage: string;
+  message: string;
   statistics_list: Statistics_list[];
 }
 
@@ -16,6 +16,7 @@ export interface Statistics_list {
   ques_id: number;
   ques_name: string;
   quiz_name: string;
+  text_answer: Array<string>;
 }
 
 
@@ -78,6 +79,7 @@ export class StatisticsComponent {
         description: quiz_basic_info.description,
         quest: new Array<any>
       }
+
       this.statistics_res.statistics_list.forEach(item => {
         const colorCount = Object.keys(item.option_count_map).length;
         if (colorCount !== 0) {
@@ -87,16 +89,17 @@ export class StatisticsComponent {
             labels: Object.keys(item.option_count_map),
             data: Object.values(item.option_count_map),
             color: this.generateColors(colorCount),
-            Type : "C" // Choice
+            text_answer: [],
+            Type: 'C' // Choice
           })
         } else {
           questData.quest.push({
             id: item.ques_id,
             name: item.ques_name,
             labels: [],
-            data: [],
             color: [],
-            Type:"T" // Text
+            text_answer: item.text_answer,
+            Type: 'T' // Text
           })
         }
 
@@ -107,6 +110,7 @@ export class StatisticsComponent {
 
 
   }
+
 
   generateColors(count: number): string[] {
     const baseColors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'teal', 'pink', 'brown', 'cyan'];
