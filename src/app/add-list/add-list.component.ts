@@ -67,11 +67,11 @@ export class AddListComponent {
     //讓tab沒辦法被點選
     this.tabLink.quesStatus(sessionStorage.getItem("quesStatus"));
 
-    //判定是否為修改問卷
-    this.recreate();
-
     //將最早開始時間限制在當日
     this.set_start_date_to_today();
+
+    //判定是否為修改問卷
+    this.recreate();
 
   }
 
@@ -99,6 +99,8 @@ export class AddListComponent {
     }
     // <input  type : date> 接收日期格式 : yyyy-mm-dd
     this.defaultDate = this.date.getFullYear() + "-" + monStr + "-" + dateStr;
+    this.start_date = new Date(this.defaultDate);
+    this.end_date = new Date(this.defaultDate);
   }
 
   //判定是否為修改問卷
@@ -112,32 +114,25 @@ export class AddListComponent {
     // 有資料就將資料放入相對應的欄位
     this.name = this.quesTemp.name;
     this.description = this.quesTemp.description;
+    this.start_date = this.quesTemp.start_date;
+    this.end_date = this.quesTemp.end_date;
 
-    // 設定如果開始時間跟結束時間如果比現在還要早時，將它設定成當日
-    const now = moment().startOf('day');
-    if (now.isBefore(this.quesTemp.start_date)) {
-      this.start_date = this.quesTemp.start_date;
-    }
-
-    if (now.isBefore(this.quesTemp.end_date)) {
-      this.end_date = this.quesTemp.end_date;
-    }
 
     //如果沒有 quiz id 就 return
     if (this.quesTemp.id == 0) {
       return
     }
 
-     // api 獲得 ques 方法
+    // api 獲得 ques 方法
 
     // 要回傳的 ques 陣列
-    let question_list : {
-      quiz_id:number,
-      ques_id:number,
-      ques_name:string,
-      required:boolean,
-      type:string,
-      options:{ option : string, option_number : number}[],
+    let question_list: {
+      quiz_id: number,
+      ques_id: number,
+      ques_name: string,
+      required: boolean,
+      type: string,
+      options: { option: string, option_number: number }[],
     }[] = [];
     // get_ques req
     const get_ques_req = { quiz_id: this.quesTemp.id }

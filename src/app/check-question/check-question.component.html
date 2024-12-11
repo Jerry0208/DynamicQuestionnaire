@@ -39,6 +39,9 @@
           @if (quest.required) {
           <span style="color: red;">*</span>
           }
+          @if (quest.type == "M") {
+            <span>(複選)</span>
+          }
         </div>
       </li>
       <!-- 多選: M 單選: S 文字輸入: T -->

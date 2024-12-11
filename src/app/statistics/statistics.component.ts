@@ -43,6 +43,9 @@ export class StatisticsComponent {
   // 整理好的圖表數據
   questData !: any;
 
+  // 判定是否有統計資料
+  has_statistics_data: boolean = false;
+
   // 問卷狀態(如果有問卷狀態就返回後台沒有就回前台)
   quesStatus = sessionStorage.getItem("quesStatus")
 
@@ -70,7 +73,15 @@ export class StatisticsComponent {
     // 發送 req 並整理資料成統計圖表所需要的格式
     const quiz_id = quiz_basic_info.id
     this.http.get("http://localhost:8080/quiz/statistics?quizId=" + quiz_id.toString()).subscribe((res: any) => {
+      // 如果沒有回饋資料，就 return
+      if (res.statistics_list.length <= 0) {
+        return;
+      }
+
       this.statistics_res = res
+      // 讓 has_statistics_data 變 true
+      this.has_statistics_data = true;
+
 
       let questData = {
         name: quiz_basic_info.name,
@@ -102,8 +113,8 @@ export class StatisticsComponent {
             Type: 'T' // Text
           })
         }
-
       })
+
       this.questData = questData
     })
 

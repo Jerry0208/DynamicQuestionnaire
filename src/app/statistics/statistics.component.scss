@@ -18,7 +18,16 @@
     &:hover {
       width: 200px;
       height: 65px;
-      font-weight:600;
+      font-weight: 600;
     }
+  }
+
+  .not_found {
+    height: 25%;
+    width: 25%;
+    text-align: center;
+    display: flex;
+    justify-self: center;
+    font-size: 50px;
   }
 }
