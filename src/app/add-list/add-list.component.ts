@@ -99,15 +99,14 @@ export class AddListComponent {
     }
     // <input  type : date> 接收日期格式 : yyyy-mm-dd
     this.defaultDate = this.date.getFullYear() + "-" + monStr + "-" + dateStr;
-    this.start_date = new Date(this.defaultDate);
-    this.end_date = new Date(this.defaultDate);
   }
 
   //判定是否為修改問卷
   recreate() {
 
     // 如果沒資料，就 return
-    if (!this.quesTemp.name && !this.quesTemp.description && !this.quesTemp.start_date && !this.quesTemp.end_date) {
+    if (!this.quesTemp.name && !this.quesTemp.description
+        && !this.quesTemp.start_date && !this.quesTemp.end_date) {
       return;
     }
 

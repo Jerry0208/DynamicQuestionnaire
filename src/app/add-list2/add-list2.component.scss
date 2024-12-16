@@ -47,7 +47,7 @@ td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-selec
 }
 
 .block {
-  width: 24px;
+  width: 35px;
   display: inline-block;
 }
 
@@ -102,7 +102,7 @@ td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-selec
     }
 
     to {
-      height: 25vh;
+      height: 34vh;
       background: rgb(243, 243, 250);
     }
   }
@@ -123,7 +123,7 @@ td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-select.mat-column-selec
 .closeOptionCss {
   margin-bottom: 3px;
   animation-name: close;
-  animation-duration: 0.4s;
+  animation-duration: 0.3s;
 
   @keyframes close {
     from {

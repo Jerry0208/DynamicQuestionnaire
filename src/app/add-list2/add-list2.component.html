@@ -17,8 +17,8 @@
       </mat-select>
     </mat-form-field>
     <!-- 是否為必選題 -->
-    <label for="input" class="needCss">必選 : <input type="checkbox" value="need" style="margin-left: 3px;height: 18px
-    ;width: 18px;"[(ngModel)]="required"></label>
+     <span class="needCss"><input type="checkbox"   value="need" style="margin-left: 3px;height: 18px
+    ;width: 18px;"[(ngModel)]="required"><label for="input" style="margin-left: 5px;">必填</label></span>
     @if(rewrite_mode){
     <span class="rewrite" style="margin-left: 10%;">再編輯中</span>
     }
